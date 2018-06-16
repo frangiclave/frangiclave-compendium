@@ -1,0 +1,5 @@
+[frangiclave]
+
+debug = false
+
+read_only = true

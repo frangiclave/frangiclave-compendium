@@ -1,0 +1,229 @@
+html, body {
+}
+
+body {
+    background: #ded1b4 url('img/felt.png');
+    color: #233844;
+    display: flex;
+    flex-flow: column;
+    font-family: Lato, Verdana, Arial, sans-serif;
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #b956f4 url('img/felt.png');
+    flex: 0 1 auto;
+    font-family: 'Forum', Lato, Verdana, Arial, sans-serif;
+    font-size: 2em;
+    padding: 0.8em 1.2em calc(0.8em + 3px);
+}
+
+header a {
+    text-decoration: none;
+}
+
+h1 {
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    background-color: #331544;
+    color: transparent;
+    display: inline;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0;
+    text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
+}
+
+#header-image {
+    height: 1.8em;
+    margin-right: 0.5em;
+    vertical-align: text-bottom;
+    width: 1.8em;
+}
+
+#container {
+    box-shadow: 0 -8px 10px #8f68a2;
+    display: flex;
+    flex-flow: row;
+    flex: 1 1 auto;
+}
+
+#sidebar {
+    background: #eaeaea;
+    padding: 0;
+    width: 300px;
+}
+
+#actions {
+    background-color: #e2d0e4;
+    box-shadow: inset 0 -4px 10px #cdafce;
+    padding: 1em 0;
+    text-align: center;
+}
+
+.action {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 1em;
+    padding: 0.4em 1em;
+}
+
+.section-title:last-of-type {
+    border-bottom: solid 1px #594a5a;
+}
+
+.section-title {
+    background: linear-gradient(#906e90, #7f6284);
+    border-top: solid 1px #594a5a;
+    color: white;
+    cursor: pointer;
+    font-size: 1.3em;
+    font-weight: bold;
+    overflow-x: auto;
+    padding: 0.6em;
+}
+
+.section-file {
+    margin-bottom: 1em;
+}
+
+.section-file-title {
+    color: #696969;
+    font-size: 0.8em;
+    font-style: italic;
+    padding: 0.3em;
+    word-break: break-all;
+}
+
+.section-file-actions {
+    float: right;
+}
+
+.section-file-actions svg {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 0.5em;
+}
+
+.section-file-actions svg:hover {
+    color: #430043;
+}
+
+.section-item {
+    color: #233844;
+    display: block;
+    font-size: 0.9em;
+    padding: 0.2em 0.2em 0.2em 0.8em;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.section-item:hover {
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+#content {
+    background-color: #ffffff;
+    box-shadow: -5px 0 10px -5px #b1a6b7;
+    flex: 1 1 0;
+    padding: 1em;
+}
+
+#content-title {
+    border-bottom: solid 1px #6d556f;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 0 0.2em;
+    word-break: break-all;
+}
+
+#content-title-prefix {
+    color: #6d556f;
+    font-weight: normal;
+}
+
+#content-actions {
+    float: right;
+}
+
+.content-action {
+    margin-left: 1em;
+}
+
+footer {
+    box-shadow: inset 0 8px 10px #a7a99d;
+    color: #4a4e3e;;
+    font-size: 0.8em;
+    font-style: italic;
+    padding: 1.6em;
+    text-align: center;
+}
+
+/* Content Styling */
+#content a {
+    color: #c56dd8;
+    text-decoration: none;
+}
+
+#content a:hover {
+    color: #7a637b;
+}
+
+#content .aspect {
+    background-color: #4e8fc3;
+    color: #dbe5e6;
+    display: inline-block;
+    margin: 0.2em 0.5em;
+    padding-left: 10px;
+    height: 30px;
+    vertical-align: top;
+}
+
+#content .aspect:hover {
+    background-color: #9a82cd;
+    color: #dbe5e6;
+}
+
+#content .aspect-text {
+    display: inline-block;
+    font-size: 18px;
+    padding: 3px 0;
+    vertical-align: top;
+}
+
+#content .aspect img {
+    margin-left: 10px;
+}
+
+#content h3 {
+    border-left: solid 0.2em #866a86;
+    border-top: solid 0.1em #866a86;
+    padding: 0.2em 0.3em;
+}
+
+#content .multiline {
+    white-space: pre;
+}
+
+#content ul {
+    list-style: none;
+    padding: 0 1em;
+    margin: 0;
+}
+
+#content li {
+    padding-left: 1em;
+    padding-bottom: 0.2em;
+    text-indent: -1em;
+}
+
+#content li::before {
+    color: #ad96ad;
+    content: "▪ ";
+    padding-right: 0.5em;
+}

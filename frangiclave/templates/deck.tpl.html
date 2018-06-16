@@ -1,0 +1,46 @@
+{% extends "base.tpl.html" %}
+{% import "macros.tpl.html" as m %}
+{% block title %}Deck{% endblock %}
+{% block content %}
+<h2 id="content-title">
+    {% if not read_only %}
+    <span id="content-actions">
+        <a href="#" class="content-action" id="content-delete">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+        <a href="#" class="content-action" id="content-edit">
+            <span class="fas fa-edit"></span>
+        </a>
+    </span>
+    {% endif %}
+    <span id="content-title-prefix">Deck:</span> {{ deck.deck_id }}
+</h2>
+
+<p><strong>Label:</strong> {{ m.optional(deck.label) }}</p>
+
+<p><strong>Description:</strong> {{ m.optional(deck.description) }}</p>
+
+<p><strong>Draw Messages:</strong></p>
+<ul>
+    {% for card, message in deck.draw_messages.items() %}<li>{{ m.element(card)}}: {{ message }}</li>{% endfor %}
+</ul>
+
+<p><strong>Default Draw Messages:</strong></p>
+<ul>
+    {% for card, message in deck.default_draw_messages.items() %}<li>{{ m.element(card)}}: {{ message }}</li>{% endfor %}
+</ul>
+
+<p><strong>Starting Cards:</strong></p>
+<ul>
+    {% for card in deck.starting_cards %}<li>{{ m.element(card) }}</li>{% endfor %}
+</ul>
+
+<p><strong>Default Card:</strong> {{ m.element(deck.default_card_id) }}</p>
+
+<p><strong>Reset on Exhaustion?</strong> {{ m.yes_no(deck.resets_on_exhaustion) }}</p>
+
+<p><strong>Comment:</strong> {{ m.optional(deck.comment) }}</p>
+
+
+<h3>Used by Recipes</h3>
+{% endblock %}

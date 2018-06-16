@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %} - Cultist Simulator Compendium</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Forum|Lato" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css" />
+
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script
+            defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"
+            integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe"
+            crossorigin="anonymous"></script>
+    <script src="/static/frangiclave.js"></script>
+
+</head>
+<body>
+<header>
+    <a href="/">
+        <img src="/static/img/knock.png" id="header-image" />
+        <h1>Frangiclave</h1>
+    </a>
+</header>
+<div id="container">
+    <div id="sidebar">
+        {% if not read_only %}
+        <div id="actions">
+            <button class="action" id="action-load">Load</button>
+            <button class="action" id="action-save">Save</button>
+        </div>
+        {% endif %}
+        <div id="sections">
+            <div class="section-title">Decks</div>
+            <div class="section-list" style="display: {{ 'block' if show_decks else 'none' }};">
+                {% for file, decks in files['decks'].items() %}
+                <div class="section-file">
+                    <div class="section-file-title">
+                        {% if not read_only %}
+                        <div class="section-file-actions">
+                            <span class="fas fa-plus"></span>
+                            <span class="fas fa-edit"></span>
+                            <span class="fas fa-trash-alt"></span>
+                        </div>
+                        {% endif %}
+                        {{ file.name }}
+                    </div>
+                    {% for deck in decks %}
+                    <a class="section-item" href="/deck/{{ deck }}">{{ deck }}</a>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="section-title">Elements</div>
+            <div class="section-list" style="display: {{ 'block' if show_elements else 'none' }};">
+            </div>
+            <div class="section-title">Recipes</div>
+            <div class="section-list" style="display: {{ 'block' if show_recipes else 'none' }};">
+            </div>
+            <div class="section-title">Verbs</div>
+            <div class="section-list" style="display: {{ 'block' if show_verbs else 'none' }};">
+            </div>
+        </div>
+    </div>
+    <div id="content">{% block content %}Content{% endblock %}</div>
+</div>
+<footer>Version 1.0.0</footer>
+</body>
+</html>

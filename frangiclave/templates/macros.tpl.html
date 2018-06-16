@@ -1,0 +1,31 @@
+{% macro deck(id) -%}{{ optional_link('/deck/', id) }}{%- endmacro %}
+{% macro element(id) -%}{{ optional_link('/element/', id) }}{%- endmacro %}
+{% macro legacy(id) -%}{{ optional_link('/legacy/', id) }}{%- endmacro %}
+{% macro recipe(id) -%}{{ optional_link('/recipe/', id) }}{%- endmacro %}
+{% macro verb(id) -%}{{ optional_link('/verb/', id) }}{%- endmacro %}
+
+{% macro aspect(id, num) -%}<a href="element_{{ id }}.html" class="aspect"><span class="aspect-text">{{ num }}</span><img src="icons40/aspects/{{ id }}.png" onerror="this.src='icons40/aspects/_x.png'" width="30" height="30" /></a>{%- endmacro %}
+{% macro element_img(id, num) -%}<a href="element_{{ id }}.html" class="aspect"><span class="aspect-text">{{ num }}</span><img src="elementArt/{{ id }}.png" onerror="if (!this.failed) { this.failed = true; this.src='icons40/aspects/{{ id }}.png' } else { this.src='elementArt/_x.png'; }" width="30" height="30" /></a>{%- endmacro %}
+
+{% macro aspect_list(aspects) -%}{% if aspects %}{% for id, num in aspects.items() %}{{ aspect(id, num) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
+{% macro element_list(elements) -%}{% if elements %}{% for id, num in elements.items() %}{{ element_img(id, num) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
+
+{% macro multiline(string) -%}<span class="multiline"></span>{%- endmacro %}
+{% macro yes_no(boolean) -%}{% if boolean %}Yes{% else %}No{% endif %}{%- endmacro %}
+{% macro optional(value) -%}{% if value %}{{ value }}{% else %}<em>None</em>{% endif %}{%- endmacro %}
+{% macro optional_link(link_base, id) -%}{% if id %}<a href="{{ link_base + id }}">{{ id }}</a>{% else %}<em>None</em>{% endif %}{%- endmacro %}
+
+{% macro slot_specifications(specs) -%}
+    <ul>
+        {% for slot in specs %}
+            <li>
+                <strong>Label:</strong> {{ slot.label }}<br />
+                <strong>Description:</strong> {{ slot.description }}<br />
+                <strong>Aspects:</strong> {{ element_list(slot.required) }}<br />
+                <strong>Forbidden:</strong> {{ element_list(slot.forbidden) }}<br />
+                <strong>Greedy?</strong> {% if slot.greedy %}Yes{% else %}No{% endif %}<br />
+                <strong>Consumes?</strong> {% if slot.consumes %}Yes{% else %}No{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{%- endmacro %}
