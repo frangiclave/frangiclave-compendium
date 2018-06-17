@@ -1,6 +1,6 @@
 {% extends "base.tpl.html" %}
 {% import "macros.tpl.html" as m %}
-{% block title %}Deck{% endblock %}
+{% block title %}Deck: {{ deck.deck_id }}{% endblock %}
 {% block content %}
 <h2 id="content-title">
     {% if not read_only %}
@@ -18,29 +18,27 @@
 
 <p><strong>Label:</strong> {{ m.optional(deck.label) }}</p>
 
-<p><strong>Description:</strong> {{ m.optional(deck.description) }}</p>
+<p><strong>Description:</strong> {{ m.multiline(m.optional(deck.description)) }}</p>
 
 <p><strong>Draw Messages:</strong></p>
 <ul>
-    {% for card, message in deck.draw_messages.items() %}<li>{{ m.element(card)}}: {{ message }}</li>{% endfor %}
+    {% for dm in deck.draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
 </ul>
 
 <p><strong>Default Draw Messages:</strong></p>
 <ul>
-    {% for card, message in deck.default_draw_messages.items() %}<li>{{ m.element(card)}}: {{ message }}</li>{% endfor %}
+    {% for dm in deck.default_draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
 </ul>
 
-<p><strong>Starting Cards:</strong></p>
+<p><strong>Cards:</strong></p>
 <ul>
-    {% for card in deck.starting_cards %}<li>{{ m.element(card) }}</li>{% endfor %}
+    {% for card in deck.cards %}<li>{{ m.element(card.element_id) }}</li>{% endfor %}
 </ul>
 
-<p><strong>Default Card:</strong> {{ m.element(deck.default_card_id) }}</p>
+<p><strong>Default Card:</strong> {{ m.element(deck.default_card.element_id) }}</p>
 
 <p><strong>Reset on Exhaustion?</strong> {{ m.yes_no(deck.resets_on_exhaustion) }}</p>
 
-<p><strong>Comment:</strong> {{ m.optional(deck.comment) }}</p>
+<p><strong>Comments:</strong> {{ m.multiline(m.optional(deck.comments)) }}</p>
 
-
-<h3>Used by Recipes</h3>
 {% endblock %}

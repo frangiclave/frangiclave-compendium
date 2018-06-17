@@ -17,11 +17,56 @@ header {
     flex: 0 1 auto;
     font-family: 'Forum', Lato, Verdana, Arial, sans-serif;
     font-size: 2em;
-    padding: 0.8em 1.2em calc(0.8em + 3px);
+    padding: 0.4em 1.2em calc(0.4em + 3px);
 }
 
 header a {
     text-decoration: none;
+}
+
+#search-box {
+    display: block;
+    float: right;
+    margin: 0.2em;
+    text-align: right;
+}
+
+#search-text, #search-submit {
+    border: none;
+    box-sizing: content-box;
+    display: inline-block;
+    font-family: 'Forum', Lato, Verdana, Arial, sans-serif;
+    font-size: 0.9em;
+    height: 1em;
+    line-height: 1;
+    margin: 0.5em 0;
+    outline: 0;
+    padding: 0.2em;
+    vertical-align: top;
+}
+#search-text {
+    background: rgba(35, 35, 35, 0.5);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: inset 0 0 5px #4d1b6b;
+    color: #ffffff;
+    transition: background-color 1s;
+    width: 300px;
+}
+
+#search-text:focus {
+    background: rgba(75, 75, 75, 0.5);
+}
+
+#search-submit {
+    background: linear-gradient(#924cb7, #603888);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    color: #ece0ec;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0.2em 0.4em;
 }
 
 h1 {
@@ -31,6 +76,7 @@ h1 {
     background-color: #331544;
     color: transparent;
     display: inline;
+    font-size: 2em;
     font-weight: bold;
     letter-spacing: 1px;
     margin: 0;
@@ -87,6 +133,12 @@ h1 {
     padding: 0.6em;
 }
 
+.section-list {
+    display: block;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
 .section-file {
     margin-bottom: 1em;
 }
@@ -127,6 +179,10 @@ h1 {
     cursor: pointer;
 }
 
+#section-item-active {
+    background-color: #cfb8d0;
+}
+
 #content {
     background-color: #ffffff;
     box-shadow: -5px 0 10px -5px #b1a6b7;
@@ -162,6 +218,7 @@ footer {
     font-style: italic;
     padding: 1.6em;
     text-align: center;
+    text-shadow: 0 0 2px #ffffff;
 }
 
 /* Content Styling */
@@ -181,6 +238,7 @@ footer {
     margin: 0.2em 0.5em;
     padding-left: 10px;
     height: 30px;
+    text-indent: 0;
     vertical-align: top;
 }
 
@@ -203,11 +261,12 @@ footer {
 #content h3 {
     border-left: solid 0.2em #866a86;
     border-top: solid 0.1em #866a86;
+    margin: 0.1em 0;
     padding: 0.2em 0.3em;
 }
 
 #content .multiline {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 #content ul {
@@ -226,4 +285,22 @@ footer {
     color: #ad96ad;
     content: "▪ ";
     padding-right: 0.5em;
+}
+
+#content .content-image {
+    float: right;
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-top: 1em;
+}
+
+/* Search results */
+#content .search-result {
+    background-color: #fffaff;
+    border-left: solid 0.2em #866a86;
+    margin: 1em 0;
+}
+
+#content .search-result-title {
+    border: none;
 }

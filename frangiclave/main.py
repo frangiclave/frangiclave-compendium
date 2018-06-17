@@ -1,6 +1,6 @@
-import toml as toml
+import toml
 
-from frangiclave.compendium.base import Base, engine
+from frangiclave.compendium.base import Base
 from frangiclave.server import app
 
 CONFIG_FILE_NAME = 'config.toml'
@@ -11,12 +11,21 @@ def load_config(config_file_name):
         return toml.load(config_file)
 
 
+def init_db():
+    # Load all the models
+    # noinspection PyUnresolvedReferences
+    from frangiclave.compendium import deck, element, file, legacy, recipe, verb
+
+    # Create the database tables
+    Base.metadata.create_all()
+
+
 def main():
     # Load the configuration
     config = load_config(CONFIG_FILE_NAME)
 
-    # Create the database tables
-    Base.metadata.create_all(engine)
+    # Initialize the database connection
+    init_db()
 
     # Set the global variables
     app.config.update(config['frangiclave'])

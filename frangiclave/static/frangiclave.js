@@ -5,5 +5,7 @@ $(function() {
 
     $('#action-load').click(function () {
         $.get('/load/');
-    })
+    });
+
+    document.getElementById('section-item-active').scrollIntoView();
 });

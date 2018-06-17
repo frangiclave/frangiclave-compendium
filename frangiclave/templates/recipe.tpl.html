@@ -1,0 +1,75 @@
+{% extends "base.tpl.html" %}
+{% import "macros.tpl.html" as m %}
+{% block title %}Recipe: {{ recipe.recipe_id }}{% endblock %}
+{% block content %}
+<h2 id="content-title">
+    {% if not read_only %}
+    <span id="content-actions">
+        <a href="#" class="content-action" id="content-delete">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+        <a href="#" class="content-action" id="content-edit">
+            <span class="fas fa-edit"></span>
+        </a>
+    </span>
+    {% endif %}
+    <span id="content-title-prefix">Recipe:</span> {{ recipe.recipe_id }}
+</h2>
+
+{% if recipe.burn_image %}
+    <img src="/static/images/burnImages/{{ recipe.burn_image }}.png" class="content-image" width="128" />
+{% endif %}
+
+<p><strong>Label:</strong> {{ m.optional(recipe.label) }}</p>
+
+<p><strong>Start Description:</strong> {{ m.multiline(m.optional(recipe.start_description|safe)) }}</p>
+
+<p><strong>Description:</strong> {{ m.multiline(m.optional(recipe.description|safe)) }}</p>
+
+<p><strong>Action:</strong> {% if recipe.action_id %}{{ m.verb(recipe.action.verb_id) }}{% else %}<em>None</em>{% endif %}</p>
+
+<p><strong>Requirements:</strong> {{ m.element_list(recipe.requirements) }}</p>
+
+<p><strong>Effects:</strong> {{ m.element_list(recipe.effects) }}</p>
+
+<p><strong>Aspects:</strong> {{ m.element_list(recipe.aspects) }}</p>
+
+<p><strong>Mutation Effects:</strong> {% if not recipe.mutation_effects %}<em>None</em>{% endif %}</p>
+<ul>
+    {% for me in recipe.mutation_effects %}
+    <li>
+        <strong>Filter on Aspect:</strong> {{ m.element(me.filter_on_aspect.element_id) }} -> {{ m.element(me.mutate_aspect.element_id) }} ({{ me.mutation_level }}{% if me.additive %}, additive{% endif %})
+    </li>
+    {% endfor %}
+</ul>
+
+<p><strong>Alternative Recipes:</strong> {% if not recipe.alternative_recipes %}<em>Nothing</em>{% endif %}</p>
+<ul>{% for r in recipe.alternative_recipes %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+
+<p><strong>Linked Recipes:</strong> {% if not recipe.linked_recipes %}<em>Nothing</em>{% endif %}</p>
+<ul>{% for r in recipe.linked_recipes %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+
+<p><strong>Slots:</strong> {% if not recipe.slot_specifications %}<em>None</em>{% endif %}</p>
+{{ m.slot_specifications(recipe.slot_specifications) }}
+
+<p><strong>Warmup: </strong> {{ recipe.warmup }}</p>
+
+<p><strong>Maximum Executions: </strong> {{ recipe.max_executions }}</p>
+
+<p><strong>Deck Effect:</strong> {% if recipe.deck_effect %}<ul>{% for d in recipe.deck_effect %}<li>{{ m.deck(d.deck.deck_id) }}: {{ d.quantity }}</li>{% endfor %}</ul>{% else %}<em>None</em>{% endif %}</p>
+
+<p><strong>Ending Flag:</strong> {{ m.optional(recipe.ending_flag) }}</p>
+
+<p><strong>Signal Ending Flavour:</strong> {{ recipe.signal_ending_flavour.name }}</p>
+
+<p><strong>Portal Effect:</strong> {{ recipe.portal_effect.name }}</p>
+
+<p><strong>Craftable?</strong> {{ m.yes_no(recipe.craftable) }}</p>
+
+<p><strong>Hint Only?</strong> {{ m.yes_no(recipe.hint_only) }}</p>
+
+<p><strong>Signal Important Loop?</strong> {{ m.yes_no(recipe.signal_important_loop) }}</p>
+
+<p><strong>Comments:</strong> {{ m.multiline(m.optional(recipe.comments)) }}</p>
+
+{% endblock %}

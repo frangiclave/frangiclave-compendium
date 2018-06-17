@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% import "macros.tpl.html" as m %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,6 +22,10 @@
 </head>
 <body>
 <header>
+    <form id="search-box" action="/search/" method="get">
+        <input type="search" title="search" id="search-text" name="keywords" value="{{ keywords }}"/><input type="submit" id="search-submit" value="Search" />
+    </form>
+
     <a href="/">
         <img src="/static/img/knock.png" id="header-image" />
         <h1>Frangiclave</h1>
@@ -37,37 +42,28 @@
         <div id="sections">
             <div class="section-title">Decks</div>
             <div class="section-list" style="display: {{ 'block' if show_decks else 'none' }};">
-                {% for file, decks in files['decks'].items() %}
-                <div class="section-file">
-                    <div class="section-file-title">
-                        {% if not read_only %}
-                        <div class="section-file-actions">
-                            <span class="fas fa-plus"></span>
-                            <span class="fas fa-edit"></span>
-                            <span class="fas fa-trash-alt"></span>
-                        </div>
-                        {% endif %}
-                        {{ file.name }}
-                    </div>
-                    {% for deck in decks %}
-                    <a class="section-item" href="/deck/{{ deck }}">{{ deck }}</a>
-                    {% endfor %}
-                </div>
-                {% endfor %}
+                {{ m.file_list(files, 'decks', read_only, 'deck', path) }}
             </div>
             <div class="section-title">Elements</div>
             <div class="section-list" style="display: {{ 'block' if show_elements else 'none' }};">
+                {{ m.file_list(files, 'elements', read_only, 'element', path) }}
+            </div>
+            <div class="section-title">Legacies</div>
+            <div class="section-list" style="display: {{ 'block' if show_legacies else 'none' }};">
+                {{ m.file_list(files, 'legacies', read_only, 'legacy', path) }}
             </div>
             <div class="section-title">Recipes</div>
             <div class="section-list" style="display: {{ 'block' if show_recipes else 'none' }};">
+                {{ m.file_list(files, 'recipes', read_only, 'recipe', path) }}
             </div>
             <div class="section-title">Verbs</div>
             <div class="section-list" style="display: {{ 'block' if show_verbs else 'none' }};">
+                {{ m.file_list(files, 'verbs', read_only, 'verb', path) }}
             </div>
         </div>
     </div>
     <div id="content">{% block content %}Content{% endblock %}</div>
 </div>
-<footer>Version 1.0.0</footer>
+<footer>Cultist Simulator is the sole property of Weather Factory. All rights reserved.<br />All game content on this website, including images and text, is used with permission.</footer>
 </body>
 </html>

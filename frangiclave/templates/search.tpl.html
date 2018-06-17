@@ -1,0 +1,31 @@
+{% extends "base.tpl.html" %}
+{% import "macros.tpl.html" as m %}
+{% block title %}Search: {{ keywords }}{% endblock %}
+{% block content %}
+<h2 id="content-title">
+    {% if not read_only %}
+    <span id="content-actions">
+        <a href="#" class="content-action" id="content-delete">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+        <a href="#" class="content-action" id="content-edit">
+            <span class="fas fa-edit"></span>
+        </a>
+    </span>
+    {% endif %}
+    <span id="content-title-prefix">Search:</span> {{ keywords }}
+</h2>
+
+{% if not results %}<p><em>No results found.</em></p>{% endif %}
+{% for result in results %}
+<div class="search-result">
+    <h3 class="search-result-title">{{ m.optional_link('/' + result.type + '/', result.id) }}</h3>
+    <ul>
+    {% for match in result.matches %}
+        <li>{{ match }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endfor %}
+
+{% endblock %}

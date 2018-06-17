@@ -110,3 +110,4 @@ venv.bak/
 # Frangiclave
 config.toml
 frangiclave.db
+frangiclave/static/images

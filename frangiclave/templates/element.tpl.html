@@ -1,0 +1,65 @@
+{% extends "base.tpl.html" %}
+{% import "macros.tpl.html" as m %}
+{% block title %}Element: {{ element.element_id }}{% endblock %}
+{% block content %}
+<h2 id="content-title">
+    {% if not read_only %}
+    <span id="content-actions">
+        <a href="#" class="content-action" id="content-delete">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+        <a href="#" class="content-action" id="content-edit">
+            <span class="fas fa-edit"></span>
+        </a>
+    </span>
+    {% endif %}
+    <span id="content-title-prefix">Element:</span> {{ element.element_id }}
+</h2>
+    {% if element.is_aspect %}
+        <img src="/static/images/icons40/aspects/{{ element.icon or element.element_id }}.png" class="content-image" width="40" height="40" onerror="this.src='/static/images/icons40/aspects/_x.png'" />
+    {% elif not element.no_art_needed %}
+        <img src="/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='/static/images/elementArt/_x.png'" />
+    {% endif %}
+
+    <p><strong>Label:</strong> {% if element.label %}{{ element.label }}{% else %}<em>None</em>{% endif %}</p>
+
+    <p><strong>Description:</strong> {% if element.description %}{{ element.description|safe }}{% else %}<em>None</em>{% endif %}</p>
+
+    <p><strong>Aspects:</strong> {{ m.aspect_list(element.aspects) }}</p>
+
+    <p><strong>Induces:</strong> {% if not element.induces %}<em>Nothing</em>{% endif %}</p>
+    <ul>{% for recipe in element.induces %}<li>{{ m.recipe(recipe.recipe.recipe_id) }} (chance: {{ recipe.chance }}%{% if recipe.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+
+    <p><strong>Slots:</strong> {% if not element.child_slots %}<em>None</em>{% endif %}</p>
+    {{ m.slot_specifications(element.child_slots) }}
+
+    <p><strong>Cross Triggers:</strong> {% if not element.x_triggers %}<em>None</em>{% endif %}</p>
+    <ul>{% for x in element.x_triggers %}<li>{{ m.element(x.trigger.element_id) }} -> {{ m.element(x.result.element_id) }}</li>{% endfor %}</ul>
+
+    <p><strong>Triggered By:</strong> {% if not element.triggered_by %}<em>None</em>{% endif %}</p>
+    <ul>{% for x in element.triggered_by %}<li>{{ m.element(x.trigger.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
+
+    <p><strong>Triggered With:</strong> {% if not element.triggered_with %}<em>None</em>{% endif %}</p>
+    <ul>{% for x in element.triggered_with %}<li>{{ m.element(x.result.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
+
+    <p><strong>Lifetime:</strong> {% if element.lifetime %}{{ element.lifetime }}{% else %}<em>None</em>{% endif %}</p>
+
+    <p><strong>Decay To:</strong> {{ m.element(element.decay_to.element_id) }}</p>
+
+    <p><strong>Decay From:</strong> {% if not element.decay_from %}<em>None</em>{% endif %}</p>
+    <ul>{% for e in element.decay_from %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
+
+    <p><strong>Aspect?</strong> {% if element.is_aspect %}Yes{% else %}No{% endif %}</p>
+
+    <p><strong>Unique?</strong> {% if element.unique %}Yes{% else %}No{% endif %}</p>
+
+    <p><strong>No Art Needed?</strong> {% if element.no_art_needed %}Yes{% else %}No{% endif %}</p>
+
+    <p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>
+
+    <p><strong>In Decks:</strong> {% if not element.in_decks and not element.in_decks_default %}<em>None</em>{% endif %}</p>
+    <ul>{% for deck in element.in_decks + element.in_decks_default %}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
+
+    <p><strong>Comments:</strong> {{ m.optional(element.comments) }}</p>
+{% endblock %}
+

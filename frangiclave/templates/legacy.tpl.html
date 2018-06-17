@@ -1,0 +1,35 @@
+{% extends "base.tpl.html" %}
+{% import "macros.tpl.html" as m %}
+{% block title %}Legacy: {{ legacy.legacy_id }}{% endblock %}
+{% block content %}
+<h2 id="content-title">
+    {% if not read_only %}
+    <span id="content-actions">
+        <a href="#" class="content-action" id="content-delete">
+            <span class="fas fa-trash-alt"></span>
+        </a>
+        <a href="#" class="content-action" id="content-edit">
+            <span class="fas fa-edit"></span>
+        </a>
+    </span>
+    {% endif %}
+    <span id="content-title-prefix">Legacy:</span> {{ legacy.legacy_id }}
+</h2>
+
+<img src="/static/images/icons100/legacies/{{ legacy.image }}.png" class="content-image" width="100" height="100" onerror="this.src='/static/images/elementArt/_x.png'" />
+
+<p><strong>Label:</strong> {{ m.optional(legacy.label) }}</p>
+
+<p><strong>Start Description:</strong> {{ m.multiline(m.optional(legacy.start_description|safe)) }}</p>
+
+<p><strong>Description:</strong> {{ m.multiline(m.optional(legacy.description|safe)) }}</p>
+
+<p><strong>From Ending:</strong> {{ legacy.from_ending }}</p>
+
+<p><strong>Available Without Ending Match?</strong> {{ m.yes_no(legacy.available_without_ending_match) }}</p>
+
+<p><strong>Legacy Effect:</strong> {{ m.element_list(legacy.effects) }}</p>
+
+<p><strong>Comments:</strong> {{ m.multiline(m.optional(legacy.comments)) }}</p>
+
+{% endblock %}

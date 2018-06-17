@@ -67,7 +67,8 @@ def _read_dictionary(
             if not flag:
                 if num != 1 and c == ',':
                     text3 = _trim_property_value(text3)
-                    if len(text2) > 0 and text2 not in dictionary and len(text3) > 0:
+                    if len(text2) > 0 and text2 not in dictionary \
+                            and len(text3) > 0:
                         dictionary[text2] = _json_decode(text3)
                     num = 1
                     text2 = ''

@@ -1,12 +1,13 @@
 from contextlib import contextmanager
-from typing import Any, Dict
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, Integer
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///frangiclave.db')
 Session = sessionmaker(bind=engine)
+
+Base = declarative_base(engine)
 
 
 @contextmanager
@@ -21,12 +22,3 @@ def get_session():
         raise
     finally:
         session.close()
-
-
-Base = declarative_base()
-
-
-class GameContentMixin:
-    @classmethod
-    def from_data(cls, file_name: 'File', data: Dict[str, Any]):
-        raise NotImplementedError

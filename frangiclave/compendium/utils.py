@@ -1,4 +1,4 @@
-from typing import Dict, List, Any, Callable
+from typing import Dict, Any, Callable
 
 
 def to_bool(val: str) -> bool:
