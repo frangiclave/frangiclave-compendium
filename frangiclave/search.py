@@ -78,7 +78,7 @@ def _find_results(
             end = start + len(keywords)
             match = (
                     ('...' if start > 30 else '')
-                    + field[start - 30:start].lstrip()
+                    + field[max(0, start - 30):start].lstrip()
                     + field[start:end]
                     + field[end:end+30].rstrip()
                     + ('...' if len(field) - end > 30 else '')

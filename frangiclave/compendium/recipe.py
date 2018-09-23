@@ -209,7 +209,7 @@ class ElementQuantity:
     @classmethod
     def from_data(cls, val: Dict[str, str], game_contents: GameContents):
         return [
-            ElementQuantity(
+            cls(
                 element=game_contents.get_element(element_id),
                 quantity=int(quantity)
             )
@@ -238,7 +238,7 @@ class DeckQuantity:
     @classmethod
     def from_data(cls, val: Dict[str, str], game_contents: GameContents):
         return [
-            DeckQuantity(
+            cls(
                 deck=game_contents.get_deck(deck_id),
                 quantity=int(quantity)
             )
