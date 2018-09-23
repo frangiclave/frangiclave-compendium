@@ -1,3 +1,4 @@
+import io
 from glob import glob
 from os.path import join, basename
 from typing import Type, Iterable, Dict, Any, List, Tuple
@@ -85,5 +86,5 @@ def _load_content(
 
 def _load_json_data(category_dir: str) -> Iterable[Tuple[str, Dict[str, Any]]]:
     for json_file_path in glob(join(category_dir, '*.json')):
-        with open(json_file_path, 'r') as f:
+        with io.open(json_file_path, 'r', encoding='utf-8') as f:
             yield basename(json_file_path), csjson.load(f)

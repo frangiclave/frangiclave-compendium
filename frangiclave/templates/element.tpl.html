@@ -54,6 +54,8 @@
 
     <p><strong>Unique?</strong> {% if element.unique %}Yes{% else %}No{% endif %}</p>
 
+    <p><strong>Uniqueness Group:</strong> {{ m.optional(element.uniqueness_group) }}</p>
+
     <p><strong>No Art Needed?</strong> {% if element.no_art_needed %}Yes{% else %}No{% endif %}</p>
 
     <p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>

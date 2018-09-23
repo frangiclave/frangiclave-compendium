@@ -72,6 +72,7 @@ class Element(Base, GameContentMixin):
     )
     is_aspect: bool = Column(Boolean)
     unique: bool = Column(Boolean)
+    uniqueness_group: bool = Column(String, nullable=True)
     aspects: List[ElementAspect] = relationship(
         ElementAspect,
         back_populates='element',
@@ -131,11 +132,12 @@ class Element(Base, GameContentMixin):
         e.label = get(data, 'label')
         e.description = get(data, 'description')
         e.animation_frames = get(data, 'animFrames', 0, int)
-        e.icon = get(data, 'icon', None)
+        e.icon = get(data, 'icon')
         e.lifetime = get(data, 'lifetime', 0.0, float)
         e.decay_to = game_contents.get_element(get(data, 'decayTo', None))
         e.is_aspect = get(data, 'isAspect', False, to_bool)
         e.unique = get(data, 'unique', False, to_bool)
+        e.uniqueness_group = get(data, 'uniquenessgroup')
         e.aspects = [
             ElementAspect(
                 element=e,

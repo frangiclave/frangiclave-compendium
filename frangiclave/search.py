@@ -36,6 +36,7 @@ def search_compendium(session: Session, keywords: Optional[str]) -> List[Dict[st
         Element.element_id,
         Element.label,
         Element.description,
+        Element.uniqueness_group,
         Element.comments
     ).all()
     results += _find_results(search_keywords, 'element', element_candidates)
