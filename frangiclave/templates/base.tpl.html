@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-{% import "macros.tpl.html" as m %}
+{% import "macros.tpl.html" as m with context %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %} - Frangiclave Compendium</title>
 
     <link href="https://fonts.googleapis.com/css?family=Forum|Lato" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="{{ base_url }}/static/style.css" />
 
 
     <script
@@ -17,17 +17,17 @@
             defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"
             integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe"
             crossorigin="anonymous"></script>
-    <script src="/static/frangiclave.js"></script>
+    <script src="{{ base_url }}/static/frangiclave.js"></script>
 
 </head>
 <body>
 <header>
-    <form id="search-box" action="/search/" method="get">
+    <form id="search-box" action="{{ base_url }}/search/" method="get">
         <input type="search" title="search" id="search-text" name="keywords" value="{{ keywords }}"/><input type="submit" id="search-submit" value="Search" />
     </form>
 
-    <a href="/">
-        <img src="/static/img/knock.png" id="header-image" />
+    <a href="{{ base_url }}/">
+        <img src="{{ base_url }}/static/img/knock.png" id="header-image" />
         <h1>Frangiclave</h1>
     </a>
 </header>

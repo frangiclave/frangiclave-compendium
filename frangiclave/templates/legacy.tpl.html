@@ -1,5 +1,5 @@
 {% extends "base.tpl.html" %}
-{% import "macros.tpl.html" as m %}
+{% import "macros.tpl.html" as m with context %}
 {% block title %}Legacy: {{ legacy.legacy_id }}{% endblock %}
 {% block content %}
 <h2 id="content-title">
@@ -16,7 +16,7 @@
     <span id="content-title-prefix">Legacy:</span> {{ legacy.legacy_id }}
 </h2>
 
-<img src="/static/images/icons100/legacies/{{ legacy.image }}.png" class="content-image" width="100" height="100" onerror="this.src='/static/images/elementArt/_x.png'" />
+<img src="{{ base_url }}/static/images/icons100/legacies/{{ legacy.image }}.png" class="content-image" width="100" height="100" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
 
 <p><strong>Label:</strong> {{ m.optional(legacy.label) }}</p>
 

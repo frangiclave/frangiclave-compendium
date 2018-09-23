@@ -1,5 +1,5 @@
 {% extends "base.tpl.html" %}
-{% import "macros.tpl.html" as m %}
+{% import "macros.tpl.html" as m with context %}
 {% block title %}Element: {{ element.element_id }}{% endblock %}
 {% block content %}
 <h2 id="content-title">
@@ -16,9 +16,9 @@
     <span id="content-title-prefix">Element:</span> {{ element.element_id }}
 </h2>
     {% if element.is_aspect %}
-        <img src="/static/images/icons40/aspects/{{ element.icon or element.element_id }}.png" class="content-image" width="40" height="40" onerror="this.src='/static/images/icons40/aspects/_x.png'" />
+        <img src="{{ base_url }}/static/images/icons40/aspects/{{ element.icon or element.element_id }}.png" class="content-image" width="40" height="40" onerror="this.src='{{ base_url }}/static/images/icons40/aspects/_x.png'" />
     {% elif not element.no_art_needed %}
-        <img src="/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='/static/images/elementArt/_x.png'" />
+        <img src="{{ base_url }}/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
     {% endif %}
 
     <p><strong>Label:</strong> {% if element.label %}{{ element.label }}{% else %}<em>None</em>{% endif %}</p>

@@ -1,5 +1,7 @@
 [frangiclave]
 
+BASE_URL = "http://localhost:5000"
+
 DEBUG = false
 
 GAME_DIRECTORY = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Simulator\\"

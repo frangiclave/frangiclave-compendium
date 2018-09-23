@@ -1,5 +1,5 @@
 {% extends "base.tpl.html" %}
-{% import "macros.tpl.html" as m %}
+{% import "macros.tpl.html" as m with context %}
 {% block title %}Recipe: {{ recipe.recipe_id }}{% endblock %}
 {% block content %}
 <h2 id="content-title">
@@ -17,7 +17,7 @@
 </h2>
 
 {% if recipe.burn_image %}
-    <img src="/static/images/burnImages/{{ recipe.burn_image }}.png" class="content-image" width="128" />
+    <img src="{{ base_url }}/static/images/burnImages/{{ recipe.burn_image }}.png" class="content-image" width="128" />
 {% endif %}
 
 <p><strong>Label:</strong> {{ m.optional(recipe.label) }}</p>

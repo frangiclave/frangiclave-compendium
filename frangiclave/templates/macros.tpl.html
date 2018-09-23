@@ -4,15 +4,15 @@
 {% macro recipe(id) -%}{{ optional_link('/recipe/', id) }}{%- endmacro %}
 {% macro verb(id) -%}{{ optional_link('/verb/', id) }}{%- endmacro %}
 
-{% macro element_quantity(element, quantity) -%}<a href="/element/{{ element.element_id }}/" class="aspect"><span class="aspect-text">{{ quantity }}</span>{% if element.is_aspect %}{{ icons40(element) }}{% else %}{{ elementArt(element) }}{% endif %}</a>{%- endmacro %}
+{% macro element_quantity(element, quantity) -%}<a href="{{ base_url }}/element/{{ element.element_id }}/" class="aspect"><span class="aspect-text">{{ quantity }}</span>{% if element.is_aspect %}{{ icons40(element) }}{% else %}{{ elementArt(element) }}{% endif %}</a>{%- endmacro %}
 
 
-{% macro image(folder, element) -%}<img src="/static/images/{{ folder }}/{% if element.icon %}{{ element.icon }}{% else %}{{ element.element_id }}{% endif %}.png" width="30" height="30" onerror="this.src='/static/images/{{ folder }}/_x.png'" />{%- endmacro %}
+{% macro image(folder, element) -%}<img src="{{ base_url }}/static/images/{{ folder }}/{% if element.icon %}{{ element.icon }}{% else %}{{ element.element_id }}{% endif %}.png" width="30" height="30" onerror="this.src='/static/images/{{ folder }}/_x.png'" />{%- endmacro %}
 {% macro icons40(element) -%}{{ image("icons40/aspects", element) }}{%- endmacro %}
 {% macro elementArt(element) -%}{{ image("elementArt", element) }}{%- endmacro %}
 
-{% macro aspect(a) -%}<a href="/element/{{ a.aspect.element_id }}/" class="aspect"><span class="aspect-text">{{ a.quantity }}</span>{{ icons40(a.aspect) }}</a>{%- endmacro %}
-{% macro item(i) -%}<a href="/element/{{ i.element.element_id }}/" class="aspect"><span class="aspect-text">{{ i.quantity }}</span>{{ icons40(i.element) }}</a>{%- endmacro %}
+{% macro aspect(a) -%}<a href="{{ base_url }}/element/{{ a.aspect.element_id }}/" class="aspect"><span class="aspect-text">{{ a.quantity }}</span>{{ icons40(a.aspect) }}</a>{%- endmacro %}
+{% macro item(i) -%}<a href="{{ base_url }}/element/{{ i.element.element_id }}/" class="aspect"><span class="aspect-text">{{ i.quantity }}</span>{{ icons40(i.element) }}</a>{%- endmacro %}
 
 {% macro aspect_list(aspects) -%}{% if aspects %}{% for a in aspects %}{{ element_quantity(a.aspect, a.quantity) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
 {% macro element_list(elements) -%}{% if elements %}{% for e in elements %}{{ element_quantity(e.element, e.quantity) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
@@ -20,7 +20,7 @@
 {% macro multiline(string) -%}<span class="multiline">{{ string }}</span>{%- endmacro %}
 {% macro yes_no(boolean) -%}{% if boolean %}Yes{% else %}No{% endif %}{%- endmacro %}
 {% macro optional(value) -%}{% if value %}{{ value }}{% else %}<em>None</em>{% endif %}{%- endmacro %}
-{% macro optional_link(link_base, id) -%}{% if id %}<a href="{{ link_base + id }}">{{ id }}</a>{% else %}<em>None</em>{% endif %}{%- endmacro %}
+{% macro optional_link(link_base, id) -%}{% if id %}<a href="{{ base_url}}{{ link_base + id }}">{{ id }}</a>{% else %}<em>None</em>{% endif %}{%- endmacro %}
 
 {% macro slot_specifications(specs) -%}
 <ul>
@@ -51,7 +51,7 @@
         {{ file.name }} ({{ file.group.value }})
     </div>
     {% for entry in entries %}
-    <a class="section-item" href="/{{ prefix }}/{{ entry }}/" {% if path == '/' + prefix + '/' + entry + '/'%}id="section-item-active"{% endif %}>{{ entry }}</a>
+    <a class="section-item" href="{{ base_url }}/{{ prefix }}/{{ entry }}/" {% if path == '/' + prefix + '/' + entry + '/'%}id="section-item-active"{% endif %}>{{ entry }}</a>
     {% endfor %}
 </div>
 {% endfor %}

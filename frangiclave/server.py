@@ -165,6 +165,7 @@ def add_global_variables():
             ]
         session.expunge_all()
     return dict(
+        base_url=app.config['BASE_URL'],
         path=request.path,
         files=files,
         read_only=app.config['READ_ONLY'],
