@@ -24,7 +24,9 @@ class ElementAspect(Base):
         'Element', back_populates='aspects', foreign_keys=element_id
     )
     aspect_id: int = Column(Integer, ForeignKey('elements.id'))
-    aspect: 'Element' = relationship('Element', foreign_keys=aspect_id)
+    aspect: 'Element' = relationship(
+        'Element', back_populates='_aspect_for', foreign_keys=aspect_id
+    )
     quantity: int = Column(Integer)
 
 
@@ -75,6 +77,11 @@ class Element(Base, GameContentMixin):
         back_populates='element',
         foreign_keys=ElementAspect.element_id
     )
+    _aspect_for: List[ElementAspect] = relationship(
+        ElementAspect,
+        back_populates='aspect',
+        foreign_keys=ElementAspect.aspect_id
+    )
     induces: List['ElementLinkedRecipeDetails'] = relationship(
         'ElementLinkedRecipeDetails', back_populates='element'
     )
@@ -104,6 +111,13 @@ class Element(Base, GameContentMixin):
         'Deck', back_populates='default_card'
     )
     comments: Optional[str] = Column(String, nullable=True)
+
+    @property
+    def aspect_for(self) -> List['Element']:
+        return list(sorted(
+            set(ea.element for ea in self._aspect_for),
+            key=lambda e: e.element_id
+        ))
 
     @classmethod
     def from_data(

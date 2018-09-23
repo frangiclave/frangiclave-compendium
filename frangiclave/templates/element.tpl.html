@@ -50,6 +50,7 @@
     <ul>{% for e in element.decay_from %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
 
     <p><strong>Aspect?</strong> {% if element.is_aspect %}Yes{% else %}No{% endif %}</p>
+    <ul>{% for e in element.aspect_for %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
 
     <p><strong>Unique?</strong> {% if element.unique %}Yes{% else %}No{% endif %}</p>
 
