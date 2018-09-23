@@ -2,7 +2,7 @@ from typing import List, Tuple, Union, Dict, Any, Optional
 
 from sqlalchemy.orm import Session
 
-from frangiclave.compendium.deck import Deck
+from frangiclave.compendium.deck import Deck, DeckDrawMessage
 from frangiclave.compendium.element import Element
 from frangiclave.compendium.legacy import Legacy
 from frangiclave.compendium.recipe import Recipe
@@ -21,12 +21,16 @@ def search_compendium(session: Session, keywords: Optional[str]) -> List[Dict[st
     if not search_keywords:
         return results
 
-    deck_candidates = session.query(
-        Deck.deck_id,
-        Deck.label,
-        Deck.description,
-        Deck.comments
-    ).all()
+    deck_candidates = [
+        (
+            d.deck_id,
+            d.label,
+            d.description,
+            *[dm.message for dm in d.all_draw_messages],
+            d.comments
+        )
+        for d in session.query(Deck).all()
+    ]
     results += _find_results(search_keywords, 'deck', deck_candidates)
     element_candidates = session.query(
         Element.element_id,
@@ -69,7 +73,7 @@ def _find_results(
     results = []
     for candidate in candidates:
         matches = []
-        for field in candidate[1:]:
+        for field in candidate:
             if not field:
                 continue
             start = field.lower().find(keywords)

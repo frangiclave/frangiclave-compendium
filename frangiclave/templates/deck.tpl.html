@@ -20,12 +20,12 @@
 
 <p><strong>Description:</strong> {{ m.multiline(m.optional(deck.description)) }}</p>
 
-<p><strong>Draw Messages:</strong></p>
+<p><strong>Draw Messages:</strong> {% if not deck.draw_messages %}<em>None</em>{% endif %}</p>
 <ul>
     {% for dm in deck.draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
 </ul>
 
-<p><strong>Default Draw Messages:</strong></p>
+<p><strong>Default Draw Messages:</strong> {% if not deck.default_draw_messages %}<em>None</em>{% endif %}</p>
 <ul>
     {% for dm in deck.default_draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
 </ul>
