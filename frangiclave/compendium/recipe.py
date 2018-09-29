@@ -22,8 +22,8 @@ if TYPE_CHECKING:
 
 class EndingFlavour(Enum):
     NONE = 'none'
-    GRAND = 'grand'
-    MELANCHOLY = 'melancholy'
+    GRAND = 'Grand'
+    MELANCHOLY = 'Melancholy'
 
 
 class PortalEffect(Enum):
