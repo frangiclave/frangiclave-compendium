@@ -35,14 +35,14 @@
     <Reference Include="Mono.Cecil, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
       <HintPath>..\MonoMod\Mono.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
+      <HintPath>..\MonoMod\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
+      <HintPath>..\MonoMod\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
       <HintPath>..\MonoMod\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod, Version=18.6.0.22358, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\MonoMod\MonoMod.exe</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.Utils, Version=18.6.0.22356, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\MonoMod\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\CultistSimulator\Assembly-CSharp.dll</HintPath>
@@ -58,6 +58,12 @@
     </Reference>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <HintPath>..\CultistSimulator\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod, Version=18.6.0.21906, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\MonoMod\MonoMod.exe</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils, Version=18.6.0.21905, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\MonoMod\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
       <HintPath>..\CultistSimulator\System.dll</HintPath>
