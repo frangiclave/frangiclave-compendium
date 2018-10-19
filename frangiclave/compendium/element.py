@@ -13,6 +13,8 @@ from frangiclave.compendium.utils import to_bool, get
 
 if TYPE_CHECKING:
     from frangiclave.compendium.deck import Deck, DeckCard
+    from frangiclave.compendium.recipe import RecipeRequirement, Recipe, \
+    RecipeEffect
 
 
 class ElementAspect(Base):
@@ -114,6 +116,12 @@ class Element(Base, GameContentMixin):
     in_decks_default: List['Deck'] = relationship(
         'Deck', back_populates='default_card'
     )
+    _requirement_for_recipes: List['RecipeRequirement'] = relationship(
+        'RecipeRequirement', back_populates='element'
+    )
+    _effect_of_recipes: List['RecipeEffect'] = relationship(
+        'RecipeEffect', back_populates='element'
+    )
     comments: Optional[str] = Column(String, nullable=True)
 
     @hybrid_property
@@ -128,6 +136,20 @@ class Element(Base, GameContentMixin):
         return tuple(sorted(
             list(dc.deck for dc in self._in_decks) + self.in_decks_default,
             key=lambda deck: deck.deck_id
+        ))
+
+    @hybrid_property
+    def requirement_for_recipes(self) -> Tuple['Recipe']:
+        return tuple(sorted(
+            (rr.recipe for rr in self._requirement_for_recipes),
+            key=lambda recipe: recipe.recipe_id
+        ))
+
+    @hybrid_property
+    def effect_of_recipes(self) -> Tuple['Recipe']:
+        return tuple(sorted(
+            (rr.recipe for rr in self._effect_of_recipes),
+            key=lambda recipe: recipe.recipe_id
         ))
 
     @classmethod

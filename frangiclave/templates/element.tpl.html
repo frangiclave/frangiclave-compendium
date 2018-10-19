@@ -42,6 +42,12 @@
     <p><strong>Triggered With:</strong> {% if not element.triggered_with %}<em>None</em>{% endif %}</p>
     <ul>{% for x in element.triggered_with %}<li>{{ m.element(x.result.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
 
+    <p><strong>Requirement for Recipes:</strong> {% if not element.requirement_for_recipes %}<em>None</em>{% endif %}</p>
+    <ul>{% for recipe in element.requirement_for_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
+
+    <p><strong>Effect of Recipes:</strong> {% if not element.effect_of_recipes %}<em>None</em>{% endif %}</p>
+    <ul>{% for recipe in element.effect_of_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
+
     <p><strong>Lifetime:</strong> {% if element.lifetime %}{{ element.lifetime }}{% else %}<em>None</em>{% endif %}</p>
 
     <p><strong>Decay To:</strong> {{ m.element(element.decay_to.element_id) }}</p>
@@ -65,7 +71,7 @@
     <p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>
 
     <p><strong>In Decks:</strong> {% if not element.in_decks and not element.in_decks_default %}<em>None</em>{% endif %}</p>
-    <ul>{% for deck in element.in_decks%}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
+    <ul>{% for deck in element.in_decks %}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
 
     <p><strong>Comments:</strong> {{ m.optional(element.comments) }}</p>
 {% endblock %}

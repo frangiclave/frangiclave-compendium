@@ -197,6 +197,10 @@ class ElementQuantity:
         return Column(Integer, ForeignKey(Recipe.id))
 
     @declared_attr
+    def recipe(self) -> Column:
+        return relationship('Recipe')
+
+    @declared_attr
     def element_id(self) -> Column:
         return Column(Integer, ForeignKey('elements.id'))
 
