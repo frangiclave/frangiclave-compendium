@@ -12,12 +12,19 @@ from frangiclave.compendium.utils import to_bool, get
 if TYPE_CHECKING:
     from frangiclave.compendium.element import Element
 
-decks_cards = Table(
-    'decks_cards',
-    Base.metadata,
-    Column('deck_id', Integer, ForeignKey('decks.id')),
-    Column('element_id', Integer, ForeignKey('elements.id'))
-)
+
+class DeckCard(Base):
+    __tablename__ = 'deck_cards'
+
+    id = Column(Integer, primary_key=True)
+    deck_id: int = Column(Integer, ForeignKey('decks.id'))
+    deck: 'Deck' = relationship(
+        'Deck', back_populates='_cards', foreign_keys=deck_id
+    )
+    element_id: int = Column(Integer, ForeignKey('elements.id'))
+    element: 'Element' = relationship(
+        'Element', back_populates='_in_decks', foreign_keys=element_id
+    )
 
 
 class Deck(Base, GameContentMixin):
@@ -26,11 +33,11 @@ class Deck(Base, GameContentMixin):
     id = Column(Integer, primary_key=True)
     deck_id: str = Column(String, unique=True)
 
-    cards: List['Element'] = relationship(
-        'Element',
-        secondary=decks_cards,
-        back_populates='in_decks'
+    _cards: List[DeckCard] = relationship(
+        'DeckCard',
+        back_populates='deck',
     )
+
     default_card_id = Column(Integer, ForeignKey('elements.id'))
     default_card = relationship('Element', back_populates='in_decks_default')
     reset_on_exhaustion = Column(Boolean)
@@ -40,6 +47,13 @@ class Deck(Base, GameContentMixin):
         'DeckDrawMessage', back_populates='deck'
     )
     comments: Optional[str] = Column(String, nullable=True)
+
+    @hybrid_property
+    def cards(self) -> Tuple['Element']:
+        return tuple(sorted(
+            (dc.element for dc in self._cards),
+            key=lambda e: e.element_id
+        ))
 
     @hybrid_property
     def draw_messages(self) -> Tuple['DeckDrawMessage']:
@@ -58,7 +72,10 @@ class Deck(Base, GameContentMixin):
     ) -> 'Deck':
         d = game_contents.get_deck(data['id'])
         d.file = file
-        d.cards = [game_contents.get_element(c) for c in get(data, 'spec', [])]
+        d._cards = [
+            DeckCard(element=game_contents.get_element(c))
+            for c in get(data, 'spec', [])
+        ]
         d.default_card = game_contents.get_element(
             get(data, 'defaultcard', None)
         )

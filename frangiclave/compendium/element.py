@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, Any, Dict, Optional, List
+from typing import TYPE_CHECKING, Any, Dict, Optional, List, Tuple
 
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
 from frangiclave.compendium.base import Base, Session
@@ -11,7 +12,7 @@ from frangiclave.compendium.slot_specification import SlotSpecification
 from frangiclave.compendium.utils import to_bool, get
 
 if TYPE_CHECKING:
-    from frangiclave.compendium.deck import Deck
+    from frangiclave.compendium.deck import Deck, DeckCard
 
 
 class ElementAspect(Base):
@@ -104,20 +105,29 @@ class Element(Base, GameContentMixin):
         back_populates='result',
         foreign_keys=ElementXTrigger.result_id
     )
+    is_hidden: bool = Column(Boolean)
     no_art_needed: bool = Column(Boolean)
-    in_decks: List['Deck'] = relationship(
-        'Deck', secondary='decks_cards', back_populates='cards'
+    resaturate: bool = Column(Boolean)
+    _in_decks: List['DeckCard'] = relationship(
+        'DeckCard', back_populates='element'
     )
     in_decks_default: List['Deck'] = relationship(
         'Deck', back_populates='default_card'
     )
     comments: Optional[str] = Column(String, nullable=True)
 
-    @property
-    def aspect_for(self) -> List['Element']:
-        return list(sorted(
+    @hybrid_property
+    def aspect_for(self) -> Tuple['Element']:
+        return tuple(sorted(
             set(ea.element for ea in self._aspect_for),
             key=lambda e: e.element_id
+        ))
+
+    @hybrid_property
+    def in_decks(self) -> Tuple['Deck']:
+        return tuple(sorted(
+            list(dc.deck for dc in self._in_decks) + self.in_decks_default,
+            key=lambda deck: deck.deck_id
         ))
 
     @classmethod
@@ -159,7 +169,9 @@ class Element(Base, GameContentMixin):
                 result=game_contents.get_element(result_id)
             ) for trigger_id, result_id in get(data, 'xtriggers', {}).items()
         ]
+        e.is_hidden = get(data, 'isHidden', False, to_bool)
         e.no_art_needed = get(data, 'noartneeded', False, to_bool)
+        e.resaturate = get(data, 'resaturate', False, to_bool)
         e.comments = get(data, 'comments', None)
         return e
 

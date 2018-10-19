@@ -56,12 +56,16 @@
 
     <p><strong>Uniqueness Group:</strong> {{ m.optional(element.uniqueness_group) }}</p>
 
-    <p><strong>No Art Needed?</strong> {% if element.no_art_needed %}Yes{% else %}No{% endif %}</p>
+    <p><strong>Hidden?</strong> {{ m.yes_no(element.is_hidden) }}</p>
+
+    <p><strong>No Art Needed?</strong> {{ m.yes_no(element.no_art_needed) }}</p>
+
+    <p><strong>Resaturate?</strong> {{ m.yes_no(element.resaturate) }}</p>
 
     <p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>
 
     <p><strong>In Decks:</strong> {% if not element.in_decks and not element.in_decks_default %}<em>None</em>{% endif %}</p>
-    <ul>{% for deck in element.in_decks + element.in_decks_default %}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
+    <ul>{% for deck in element.in_decks%}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
 
     <p><strong>Comments:</strong> {{ m.optional(element.comments) }}</p>
 {% endblock %}
