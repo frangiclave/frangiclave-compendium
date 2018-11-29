@@ -3,6 +3,7 @@ from typing import List, Tuple, Union, Dict, Any, Optional
 from collections import OrderedDict, defaultdict
 
 import json
+import toml
 
 from sqlalchemy.orm import Session
 
@@ -14,6 +15,11 @@ from frangiclave.compendium.recipe import Recipe
 from frangiclave.compendium.verb import Verb
 from frangiclave.compendium.file import File
 from frangiclave.compendium.slot_specification import SlotSpecification
+from frangiclave.server import app
+from frangiclave.main import CONFIG_FILE_NAME, load_config
+
+config = load_config(CONFIG_FILE_NAME)
+
 
 def export_compendium(session: Session) -> Any:
     file_list = session.query(File).order_by(File.name).all()
@@ -58,7 +64,7 @@ def export_compendium(session: Session) -> Any:
             content[category] = objs
             
             output_string = json.dumps(content, indent=4)
-            game_dir_base = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Simulator\\"
+            game_dir_base = config["frangiclave"]["GAME_DIRECTORY"]
             game_dir_cont = "cultistsimulator_Data\\StreamingAssets\\content\\"
             f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
             f.write(output_string)
