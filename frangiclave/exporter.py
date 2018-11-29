@@ -275,6 +275,7 @@ def dict_mutation_effect(mutation):
     content["filterOnAspectId"] = mutation.filter_on_aspect.element_id
     content["mutateAspectId"] = mutation.mutate_aspect.element_id
     content["mutationLevel"] = mutation.mutation_level
+    content["additive"] = mutation.additive
     return content
 
 with get_session() as session:
