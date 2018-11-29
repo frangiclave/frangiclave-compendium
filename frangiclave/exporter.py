@@ -19,34 +19,34 @@ def export_compendium(session: Session) -> Any:
     file_list = session.query(File).order_by(File.name).all()
     files = defaultdict(lambda: OrderedDict())
     decks = (
-        session.query(Deck, Deck.file_id)
+        session.query(Deck)
         .order_by(Deck.deck_id)
         .all()
     )
     elements = (
-        session.query(Element, Element.file_id)
+        session.query(Element)
         .order_by(Element.element_id)
         .all()
     )
     legacies = (
-        session.query(Legacy, Legacy.file_id)
+        session.query(Legacy)
         .order_by(Legacy.legacy_id)
         .all()
     )
     recipes = (
-        session.query(Recipe, Recipe.file_id)
+        session.query(Recipe)
         .order_by(Recipe.recipe_id)
         .all()
     )
     verbs = (
-        session.query(Verb, Verb.file_id)
+        session.query(Verb)
         .order_by(Verb.verb_id)
         .all()
     )
     items = decks + elements + legacies + recipes + verbs
     for file in file_list:
         files[file.category.value][file] = [
-            item for item, file_id in items if file_id == file.id
+            item for item in items if item.file_id == file.id
         ]
     for category in files:
         for file in files[category]:
