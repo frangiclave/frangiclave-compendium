@@ -51,23 +51,20 @@ def export_compendium(session: Session) -> Any:
     #export_elements(files["elements"])
     #export_recipes(files["recipes"])
     for category in files:
-        if category == "elements":
-            export_elements(files[category])
-        else:
-            for file in files[category]:
-                print("exporting " + category + " " + file.name)
-                content = {}
-                objs = []
-                for item in files[category][file]:
-                    objs += [dict_one_item(item, category)]
-                content[category] = objs
-                
-                output_string = json.dumps(content, indent=4)
-                game_dir_base = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Simulator\\"
-                game_dir_cont = "cultistsimulator_Data\\StreamingAssets\\content\\"
-                f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
-                f.write(output_string)
-                f.close()
+        for file in files[category]:
+            print("exporting " + category + " " + file.name)
+            content = {}
+            objs = []
+            for item in files[category][file]:
+                objs += [dict_one_item(item, category)]
+            content[category] = objs
+            
+            output_string = json.dumps(content, indent=4)
+            game_dir_base = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Simulator\\"
+            game_dir_cont = "cultistsimulator_Data\\StreamingAssets\\content\\"
+            f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
+            f.write(output_string)
+            f.close()
     return True
 
 def dict_one_item(item, category):
@@ -79,79 +76,58 @@ def dict_one_item(item, category):
         return dict_one_deck(item)
     elif category == "legacies":
         return dict_one_legacy(item)
+    elif category == "elements":
+        return dict_one_element(item)
     else:
         print("Wrong category")
         return None
     
-def export_elements(element_files: OrderedDict) -> Any:
-    for file in element_files:
-        print("exporting elements " + file.name)
-        if file.category.value != "elements":
-            print("NOT AN ELEMENT WHAT ARE YOU DOING")
-            print (file.category.value)
-            return False
-        content = "{\"elements\": [\n\t"
-        for elem in element_files[file]:
-            content += export_one_element(elem)
-        
-        content = content[:-3]
-        content += "]}"
-        game_dir_base = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Simulator\\"
-        game_dir_cont = "cultistsimulator_Data\\StreamingAssets\\content\\"
-        f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
-        f.write(content)
-        f.close()
-
-def export_one_element(elem):
-    content = "{id:" + elem.element_id + ",\n\t"
+def dict_one_element(elem):
+    content = {}
+    content["id"] = elem.element_id
     if (elem.label):
-        content += "label:\"" + elem.label + "\",\n\t"
+        content["label"] = elem.label
     if (elem.description):
-        content += "description: \"" + repr(elem.description)[1:-1] + "\",\n\t"
+        content["description"] = elem.description
     if (elem.aspects):
-        content += "aspects: {"
+        aspects = {}
         for aspect in elem.aspects:
-            content += aspect.aspect.element_id + ": "
-            content += str(aspect.quantity) + ", "
-        content = content[:-2] #strip last comma
-        content += "},\n\t"
+            aspects[aspect.aspect.element_id] = aspect.quantity
+        content["aspects"] = aspects
     if (elem.animation_frames != 0):
-        content += "animFrames:" + str(elem.animation_frames) + ",\n\t"
+        content["animFrames"] = elem.animation_frames
     if (elem.icon):
-        content += "icon:" + str(elem.icon) + ",\n\t"
+        content["icon"] = elem.icon
     if (elem.lifetime != 0):
-        content += "lifetime:" + str(elem.lifetime) + ",\n\t"
+        content["lifetime"] = elem.lifetime
     if (elem.unique):
-        content += "unique: true,\n\t"
+        content["unique"] = elem.unique
     if (elem.decay_to):
-        content += "decay_to:" + str(elem.decay_to.element_id) + ",\n\t"
+        content["decay_to"] = elem.decay_to.element_id
     if (elem.is_aspect):
-        content += "isAspect: true,\n\t"
+        content["isAspect"] = "true"
     if (elem.x_triggers):
-        content += "xtriggers: {"
+        xtriggers = {}
         for xtrigger in elem.x_triggers:
-            content += xtrigger.trigger.element_id + ": "
-            content += xtrigger.result.element_id + ", "
-        content = content[:-2] #strip last comma
-        content += "},\n\t"
+            xtriggers[xtrigger.trigger.element_id] = xtrigger.result.element_id
+        content["xtriggers"] = xtriggers
     if (elem.child_slots):
-        content += "slots: ["
+        slots = []
         for slot in elem.child_slots:
-            content += export_slot_specification(slot)
-        content = content[:-4]
-        content += "],\n\t"
+            slots += [dict_slot_specification(slot)]
+        content["slots"] = slots
     if (elem.no_art_needed):
-        content += "noartneeded: true\n\t"
+        content["noartneeded"] = "true"
     if (elem.comments):
-        content += "comments: \"" + elem.comments + "\",\n\t"
+        content["comments"] = elem.comments
     if (elem.induces):
-        content += "induces: ["
+        induces = []
         for item in elem.induces:
-            content += "{id:\"" + item.recipe.recipe_id + "\", chance:" + str(item.chance) + "},"
-        content = content[:-1]
-        content += "],\n\t"
-    content = content[:-3] + "\n\t"
-    content += "},\n\t"
+            induction = {}
+            induction["id"] = item.recipe.recipe_id
+            induction["chance"] = item.chance
+            induces += [induction]
+        content["induces"] = induces
     return content
     
 def dict_one_recipe(recipe):
@@ -274,34 +250,6 @@ def dict_one_legacy(legacy):
     content["fromEnding"] = legacy.from_ending
     content["availableWithoutEndingMatch"] = legacy.available_without_ending_match
     content["comments"] = legacy.comments
-    return content
-    
-def export_slot_specification(slot):
-    content = "{id:\"" + slot.label + "\","
-    if (slot.for_verb):
-        content += "actionID:\"" + slot.for_verb.verb_id + "\","
-    if (slot.required):
-        content += "required: {"
-        for item in slot.required:
-            content += item.element.element_id + ": " + str(item.quantity) + ","
-        if content[-1] == ',':
-            content = content[:-1]
-        content += "},"
-    if (slot.forbidden):
-        content += "forbidden: {"
-        for item in slot.forbidden:
-            content += item.element.element_id + ": " + str(item.quantity) + ","
-        content += "},"
-    if (slot.description):
-        content += "description:\"" + slot.description + "\","
-    if (slot.greedy):
-        content += "greedy:true,"
-    if (slot.consumes):
-        content += "consumes:true,"
-    if (slot.no_animation):
-        content += "noanim:true,"
-    content = content[:-1]
-    content += "},\n\t\t"
     return content
 
 def dict_slot_specification(slot):
