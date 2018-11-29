@@ -48,8 +48,6 @@ def export_compendium(session: Session) -> Any:
         files[file.category.value][file] = [
             item for item, file_id in items if file_id == file.id
         ]
-    #export_elements(files["elements"])
-    #export_recipes(files["recipes"])
     for category in files:
         for file in files[category]:
             print("exporting " + category + " " + file.name)
@@ -65,7 +63,6 @@ def export_compendium(session: Session) -> Any:
             f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
             f.write(output_string)
             f.close()
-    return True
 
 def dict_one_item(item, category):
     if category == "recipes":
@@ -103,7 +100,7 @@ def dict_one_element(elem):
     if (elem.unique):
         content["unique"] = elem.unique
     if (elem.decay_to):
-        content["decay_to"] = elem.decay_to.element_id
+        content["decayTo"] = elem.decay_to.element_id
     if (elem.is_aspect):
         content["isAspect"] = "true"
     if (elem.x_triggers):
@@ -256,7 +253,7 @@ def dict_slot_specification(slot):
     content = {}
     content["id"] = slot.label
     if (slot.for_verb):
-        content["actionID"] = slot.for_verb.verb_id
+        content["actionId"] = slot.for_verb.verb_id
     if (slot.required):
         required = {}
         for item in slot.required:
