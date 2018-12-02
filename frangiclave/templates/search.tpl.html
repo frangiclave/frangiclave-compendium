@@ -1,7 +1,7 @@
 {% extends "base.tpl.html" %}
 {% import "macros.tpl.html" as m with context %}
 {% block title %}Search: {{ keywords }}{% endblock %}
-{% block description %}{{ len(results) result(s) }}{% endblock %}
+{% block description %}{{ results|length }} result(s){% endblock %}
 {% block content %}
 <h2 id="content-title">
     {% if not read_only %}
