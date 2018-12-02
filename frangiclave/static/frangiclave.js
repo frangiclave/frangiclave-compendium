@@ -7,5 +7,7 @@ $(function() {
         $.get('/load/');
     });
 
-    document.getElementById('section-item-active').scrollIntoView();
+    var activeSectionItem = document.getElementById('section-item-active');
+    if (activeSectionItem != null)
+        activeSectionItem.scrollIntoView();
 });

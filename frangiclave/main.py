@@ -20,7 +20,7 @@ def init_db():
     Base.metadata.create_all()
 
 
-def main():
+def init():
     # Load the configuration
     config = load_config(CONFIG_FILE_NAME)
 
@@ -29,6 +29,12 @@ def main():
 
     # Set the global variables
     app.config.update(config['frangiclave'])
+
+    return app
+
+
+def main():
+    init()
 
     # Run the app
     app.run()

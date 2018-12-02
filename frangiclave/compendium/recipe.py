@@ -108,6 +108,14 @@ class Recipe(Base, GameContentMixin):
         back_populates='source_recipe',
         foreign_keys='RecipeLinkedRecipeDetails.source_recipe_id'
     )
+    from_alternative_recipes: List['RecipeAlternativeRecipeDetails'] = relationship(
+        'RecipeAlternativeRecipeDetails',
+        foreign_keys='RecipeAlternativeRecipeDetails.recipe_id'
+    )
+    from_linked_recipes: List['RecipeLinkedRecipeDetails'] = relationship(
+        'RecipeLinkedRecipeDetails',
+        foreign_keys='RecipeLinkedRecipeDetails.recipe_id'
+    )
     ending_flag: Optional[str] = Column(String, nullable=True)
     max_executions: int = Column(Integer)
     burn_image: Optional[str] = Column(String, nullable=True)
@@ -119,6 +127,16 @@ class Recipe(Base, GameContentMixin):
     )
     signal_important_loop: bool = Column(Boolean)
     comments: Optional[str] = Column(String, nullable=True)
+
+    @property
+    def from_recipes(self) -> List['Recipe']:
+        return sorted(
+            set(
+                [d.source_recipe for d in self.from_alternative_recipes]
+                + [d.source_recipe for d in self.from_linked_recipes]
+            ),
+            key=lambda r: r.recipe_id
+        )
 
     @classmethod
     def from_data(
