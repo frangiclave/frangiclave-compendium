@@ -8,6 +8,8 @@ $(function() {
     });
 
     var activeSectionItem = document.getElementById('section-item-active');
-    if (activeSectionItem != null)
+    if (activeSectionItem != null) {
         activeSectionItem.scrollIntoView();
+        window.scrollTo(0, 0);
+    }
 });

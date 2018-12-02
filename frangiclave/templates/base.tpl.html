@@ -3,11 +3,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <title>{% block title %}{% endblock %} - Frangiclave Compendium</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ self.title() }} - Frangiclave Compendium">
+    <meta name="twitter:description" content="{{ self.description() }}">
+    <meta name="twitter:image" content="https://www.frangiclave.net/static/images/elementArt/toolknockf.png">
+    <meta property="og:title" content="{{ self.title() }} - Frangiclave Compendium">
+    <meta property="og:description" content="{{ self.description() }}">
+    <meta property="og:image" content="https://www.frangiclave.net/static/images/elementArt/toolknockf.png">
+    <meta property="og:type" content="article">
 
     <link href="https://fonts.googleapis.com/css?family=Forum|Lato" rel="stylesheet">
     <link rel="stylesheet" href="{{ base_url }}/static/style.css" />
-
+    <link rel="icon" type="image/png" href="{{ base_url }}/static/img/knock.png">
 
     <script
             src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -18,7 +29,6 @@
             integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe"
             crossorigin="anonymous"></script>
     <script src="{{ base_url }}/static/frangiclave.js"></script>
-
 </head>
 <body>
 <header>

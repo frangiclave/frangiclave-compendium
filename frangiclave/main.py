@@ -34,11 +34,11 @@ def init():
 
 
 def main():
-    init()
-
     # Run the app
     app.run()
 
+
+init()
 
 if __name__ == '__main__':
     main()

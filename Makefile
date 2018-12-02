@@ -1,4 +1,5 @@
 .PHONY: run
 
 run:
-	uwsgi --socket 127.0.0.1:5777 --wsgi-file frangiclave/main.py --callable init --processes 4 --enable-threads --virtualenv=./venv/ --plugin python3 --manage-script-name
+	#uwsgi --http-socket 127.0.0.1:5777 --master --processes 4 --enable-threads --virtualenv=./venv/ --mount /=frangiclave.main:init --manage-script-name
+	uwsgi -s /tmp/frangiclave.sock --master --processes 4 --enable-threads --virtualenv=./venv/ --manage-script-name --mount /frangiclave=frangiclave.main:app --chmod-socket=777

@@ -33,8 +33,7 @@ setup(
     install_requires=[
         'flask',
         'sqlalchemy',
-        'toml',
-        'uwsgi'
+        'toml'
     ],
     extras_require={},
     include_package_data=True,
