@@ -8,6 +8,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
 from frangiclave.compendium.base import Base, Session
+from frangiclave.compendium.ending_flavour import EndingFlavour
 from frangiclave.compendium.file import File
 from frangiclave.compendium.game_content import GameContentMixin, GameContents
 from frangiclave.compendium.linked_recipe_details import LinkedRecipeDetails
@@ -18,12 +19,6 @@ from frangiclave.compendium.utils import to_bool, get
 if TYPE_CHECKING:
     from frangiclave.compendium.element import Element
     from frangiclave.compendium.deck import Deck
-
-
-class EndingFlavour(Enum):
-    NONE = 'none'
-    GRAND = 'Grand'
-    MELANCHOLY = 'Melancholy'
 
 
 class PortalEffect(Enum):
@@ -173,7 +168,7 @@ class Recipe(Base, GameContentMixin):
             get(data, 'mutations', []), game_contents
         )
         r.signal_ending_flavour = EndingFlavour(get(
-            data, 'signalEndingFlavour', 'none'
+            data, 'signalEndingFlavour', 'None'
         ))
         r.craftable = get(data, 'craftable', False, to_bool)
         r.hint_only = get(data, 'hintonly', False, to_bool)

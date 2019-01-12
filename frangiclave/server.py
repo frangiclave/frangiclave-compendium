@@ -7,6 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from frangiclave.compendium.base import get_session
 from frangiclave.compendium.deck import Deck
 from frangiclave.compendium.element import Element
+from frangiclave.compendium.ending import Ending
 from frangiclave.compendium.file import File
 from frangiclave.compendium.legacy import Legacy
 from frangiclave.compendium.recipe import Recipe
@@ -88,6 +89,16 @@ def element(element_id: str):
         )
 
 
+@app.route('/ending/<string:ending_id>/')
+def ending(ending_id: str):
+    with get_session() as session:
+        return render_template(
+            'ending.tpl.html',
+            ending=Ending.get_by_ending_id(session, ending_id),
+            show_endings=True
+        )
+
+
 @app.route('/legacy/<string:legacy_id>/')
 def legacy(legacy_id: str):
     with get_session() as session:
@@ -143,6 +154,12 @@ def add_global_variables():
             .order_by(Element.element_id)
             .all()
         )
+        endings = [
+            e for e, in session
+            .query(Ending.ending_id)
+            .order_by(Ending.ending_id)
+            .all()
+        ]
         legacies = (
             session.query(Legacy.legacy_id, Legacy.file_id)
             .order_by(Legacy.legacy_id)
@@ -168,9 +185,11 @@ def add_global_variables():
         base_url=app.config['BASE_URL'],
         path=request.path,
         files=files,
+        endings=endings,
         read_only=app.config['READ_ONLY'],
         decks_open=False,
         elements_open=False,
+        endings_open=False,
         legacies_open=False,
         recipes_open=False,
         verbs_open=False

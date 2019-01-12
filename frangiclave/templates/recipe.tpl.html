@@ -62,11 +62,11 @@
 
 <p><strong>Deck Effect:</strong> {% if recipe.deck_effect %}<ul>{% for d in recipe.deck_effect %}<li>{{ m.deck(d.deck.deck_id) }}: {{ d.quantity }}</li>{% endfor %}</ul>{% else %}<em>None</em>{% endif %}</p>
 
-<p><strong>Ending Flag:</strong> {{ m.optional(recipe.ending_flag) }}</p>
+<p><strong>Ending Flag:</strong> {{ m.ending(recipe.ending_flag) }}</p>
 
-<p><strong>Signal Ending Flavour:</strong> {{ recipe.signal_ending_flavour.name }}</p>
+<p><strong>Signal Ending Flavour:</strong> {{ recipe.signal_ending_flavour.value }}</p>
 
-<p><strong>Portal Effect:</strong> {{ recipe.portal_effect.name }}</p>
+<p><strong>Portal Effect:</strong> {{ recipe.portal_effect.value }}</p>
 
 <p><strong>Craftable?</strong> {{ m.yes_no(recipe.craftable) }}</p>
 

@@ -58,6 +58,10 @@
             <div class="section-list" style="display: {{ 'block' if show_elements else 'none' }};">
                 {{ m.file_list(files, 'elements', read_only, 'element', path) }}
             </div>
+            <div class="section-title">Endings</div>
+            <div class="section-list" style="display: {{ 'block' if show_endings else 'none' }};">
+                {{ m.generic_list(endings, 'endings', read_only, 'ending', path) }}
+            </div>
             <div class="section-title">Legacies</div>
             <div class="section-list" style="display: {{ 'block' if show_legacies else 'none' }};">
                 {{ m.file_list(files, 'legacies', read_only, 'legacy', path) }}

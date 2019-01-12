@@ -1,5 +1,6 @@
 {% macro deck(id) -%}{{ optional_link('/deck/', id) }}{%- endmacro %}
 {% macro element(id) -%}{{ optional_link('/element/', id) }}{%- endmacro %}
+{% macro ending(id) -%}{{ optional_link('/ending/', id) }}{%- endmacro %}
 {% macro legacy(id) -%}{{ optional_link('/legacy/', id) }}{%- endmacro %}
 {% macro recipe(id) -%}{{ optional_link('/recipe/', id) }}{%- endmacro %}
 {% macro verb(id) -%}{{ optional_link('/verb/', id) }}{%- endmacro %}
@@ -36,6 +37,12 @@
     {% endfor %}
 </ul>
 {%- endmacro %}
+
+{% macro generic_list(entries, category, read_only, prefix, path) -%}
+{% for entry in entries %}
+<a class="section-item" href="{{ base_url }}/{{ prefix }}/{{ entry }}/" {% if path == '/' + prefix + '/' + entry + '/'%}id="section-item-active"{% endif %}>{{ entry }}</a>
+{% endfor %}
+{% endmacro %}
 
 {% macro file_list(files, category, read_only, prefix, path) -%}
 {% for file, entries in files[category].items() %}

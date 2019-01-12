@@ -8,6 +8,7 @@ from frangiclave import csjson
 from frangiclave.compendium.base import get_session, Base
 from frangiclave.compendium.deck import Deck
 from frangiclave.compendium.element import Element
+from frangiclave.compendium.ending import Ending
 from frangiclave.compendium.file import File, FileCategory, FileGroup
 from frangiclave.compendium.game_content import GameContentMixin, GameContents
 from frangiclave.compendium.legacy import Legacy
@@ -20,6 +21,8 @@ def import_game_data(game_dir: str):
     assets_dir = join(game_dir, 'cultistsimulator_Data', 'StreamingAssets')
     content_dir = join(assets_dir, 'content')
     with get_session() as session:
+
+        # Load the content from the regular files
         game_contents = GameContents()
         for group in FileGroup:
             decks = _load_content(
@@ -66,6 +69,12 @@ def import_game_data(game_dir: str):
             session.add_all(legacies)
             session.add_all(recipes)
             session.add_all(verbs)
+
+        # Load endings a bit differently from the rest, since they are not
+        # associated with actual files
+        with io.open(join(content_dir, "endings.json"), encoding='utf-8') as f:
+            endings = [Ending.from_data(e) for e in csjson.load(f)]
+        session.add_all(endings)
 
 
 def _load_content(
