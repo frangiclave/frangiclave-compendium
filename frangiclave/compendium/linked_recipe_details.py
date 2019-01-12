@@ -33,6 +33,6 @@ class LinkedRecipeDetails:
     ) -> 'LinkedRecipeDetails':
         lr = cls()
         lr.recipe = game_contents.get_recipe(data['id'])
-        lr.chance = int(data['chance'])
+        lr.chance = int(data['chance']) if 'chance' in data else 100
         lr.additional = get(data, 'additional', False, to_bool)
         return lr

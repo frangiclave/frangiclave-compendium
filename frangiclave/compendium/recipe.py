@@ -56,10 +56,12 @@ class MutationEffect(Base):
         return [
             MutationEffect(
                 filter_on_aspect=game_contents.get_element(
-                    v['filterOnAspectId']
+                    get(v,'filterOnAspectId')
                 ),
-                mutate_aspect=game_contents.get_element(v['mutateAspectId']),
-                mutation_level=int(v['mutationLevel']),
+                mutate_aspect=game_contents.get_element(
+                    get(v, 'mutateAspectId')
+                ),
+                mutation_level=get(v, 'mutationLevel', None, int),
                 additive=get(v, 'additive', False, to_bool)
             )
             for v in val
@@ -172,7 +174,7 @@ class Recipe(Base, GameContentMixin):
         )
         r.signal_ending_flavour = EndingFlavour(get(
             data, 'signalEndingFlavour', 'none'
-        ).lower())
+        ))
         r.craftable = get(data, 'craftable', False, to_bool)
         r.hint_only = get(data, 'hintonly', False, to_bool)
         r.warmup = get(data, 'warmup', 0, int)
