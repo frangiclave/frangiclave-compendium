@@ -30,18 +30,24 @@ def _move_to_next_node(json: str, begin: int, end: int) -> int:
 
 
 def _find_matching_end(json: str, begin: int, end: int) -> int:
-    num = 0
+    num_braces = 0
+    num_brackets = 0
     flag = False
     for i in range(begin, end):
         c = json[i]
         if i == 0 or json[i - 1] != '\\':
             if c == '"':
                 flag = not flag
-            elif c == '{' or c == '[':
-                num += 1
-            elif c == '}' or c == ']':
-                num -= 1
-                if num == 0:
+            elif not flag:
+                if c == '{':
+                    num_braces += 1
+                elif c == '[':
+                    num_brackets += 1
+                elif c == '}':
+                    num_braces -= 1
+                elif c == ']':
+                    num_brackets -= 1
+                if num_braces == 0 and num_brackets == 0:
                     return i
     return end
 
