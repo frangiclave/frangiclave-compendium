@@ -1,10 +1,10 @@
-import io
 import logging
-from glob import glob
-from os.path import join, basename
+from pathlib import Path
+import platform
 from typing import Type, Iterable, Dict, Any, List, Tuple
 
-from frangiclave import csjson
+from jsom import JsomParser, ALL_WARNINGS
+
 from frangiclave.compendium.base import get_session, Base
 from frangiclave.compendium.deck import Deck
 from frangiclave.compendium.element import Element
@@ -16,10 +16,16 @@ from frangiclave.compendium.legacy import Legacy
 from frangiclave.compendium.recipe import Recipe
 from frangiclave.compendium.verb import Verb
 
+DATA_DIR = (
+    'cultistsimulator_Data' if platform.system() == 'Windows' else 'CS_Data'
+)
+
+jsom = JsomParser(ignore_warnings=ALL_WARNINGS)
+
 
 def import_game_data(game_dir: str):
-    assets_dir = join(game_dir, 'cultistsimulator_Data', 'StreamingAssets')
-    content_dir = join(assets_dir, 'content')
+    assets_dir = Path(game_dir)/DATA_DIR/'StreamingAssets'
+    content_dir = assets_dir/'content'
     with get_session() as session:
 
         # Load the content from the regular files
@@ -72,29 +78,32 @@ def import_game_data(game_dir: str):
 
         # Load endings a bit differently from the rest, since they are not
         # associated with actual files
-        with io.open(join(content_dir, "endings.json"), encoding='utf-8') as f:
-            endings = [Ending.from_data(e) for e in csjson.load(f)]
-        session.add_all(endings)
+        if (content_dir/"endings.json").is_file():
+            with (content_dir/"endings.json").open(encoding='utf-8') as f:
+                endings = [Ending.from_data(e) for e in jsom.load(f)]
+            session.add_all(endings)
 
 
 def _load_content(
         content_class: Type[GameContentMixin],
-        content_dir: str,
+        content_dir: Path,
         group: FileGroup,
         category: FileCategory,
         game_contents: GameContents
 ) -> List[GameContentMixin]:
     content = []
     for file_name, file_data in _load_json_data(
-            join(content_dir, group.value, category.value)
+            content_dir/group.value/category.value
     ):
-        file = File(category, group, file_name)
+        file = File(category, group, str(file_name))
         for data in file_data[category.value]:
             content.append(content_class.from_data(file, data, game_contents))
     return content
 
 
-def _load_json_data(category_dir: str) -> Iterable[Tuple[str, Dict[str, Any]]]:
-    for json_file_path in glob(join(category_dir, '*.json')):
-        with io.open(json_file_path, 'r', encoding='utf-8') as f:
-            yield basename(json_file_path), csjson.load(f)
+def _load_json_data(
+        category_dir: Path
+) -> Iterable[Tuple[Path, Dict[str, Any]]]:
+    for json_file_path in category_dir.glob('*.json'):
+        with json_file_path.open(encoding='utf-8') as f:
+            yield json_file_path.name, jsom.load(f)

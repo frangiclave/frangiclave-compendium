@@ -1,5 +1,7 @@
 from typing import Any, List, Dict, Union, Tuple, TextIO
 
+# Left here for now; should I delete it?
+
 
 def load(fh: TextIO) -> Union[Dict[str, Any], List[Any]]:
     return loads(fh.read())

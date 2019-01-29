@@ -2,6 +2,9 @@ from typing import List, Tuple, Union, Dict, Any, Optional
 
 from collections import OrderedDict, defaultdict
 
+from pathlib import Path
+import platform
+
 import json
 import toml
 
@@ -19,6 +22,10 @@ from frangiclave.server import app
 from frangiclave.main import CONFIG_FILE_NAME, load_config
 
 config = load_config(CONFIG_FILE_NAME)
+
+DATA_DIR = (
+    'cultistsimulator_Data' if platform.system() == 'Windows' else 'CS_Data'
+)
 
 
 def export_compendium(session: Session) -> Any:
@@ -64,11 +71,11 @@ def export_compendium(session: Session) -> Any:
             content[category] = objs
             
             output_string = json.dumps(content, indent=4)
-            game_dir_base = config["frangiclave"]["GAME_DIRECTORY"]
-            game_dir_cont = "cultistsimulator_Data\\StreamingAssets\\content\\"
-            f = open(game_dir_base + game_dir_cont + file.group.value + "\\" + file.category.value + "\\" + file.name, "w")
-            f.write(output_string)
-            f.close()
+            game_dir_base = Path(config["frangiclave"]["GAME_DIRECTORY"])
+            game_dir_cont = game_dir_base/DATA_DIR/'StreamingAssets'/'content'
+            with (game_dir_cont/file.group.value/file.category).open("w") as f:
+                f.write(output_string)
+
 
 def dict_one_item(item, category):
     if category == "recipes":
