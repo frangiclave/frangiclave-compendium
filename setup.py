@@ -33,7 +33,8 @@ setup(
     install_requires=[
         'flask',
         'sqlalchemy',
-        'toml'
+        'toml',
+        'jsom==0.0.5'
     ],
     extras_require={},
     include_package_data=True,
