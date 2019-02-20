@@ -11,7 +11,7 @@ namespace CultistSimulator.Modding.mm
     public class ResourcesManager
     {
         public static extern Sprite orig_GetSpriteForVerbLarge(string verbId);
-        
+
 		public static Sprite GetSpriteForVerbLarge(string verbId)
 		{
 			return GetSprite("icons100/verbs/", verbId);
@@ -30,9 +30,9 @@ namespace CultistSimulator.Modding.mm
 		{
 			return GetSprite("elementArt/anim/", string.Concat(imageName, "_", animFrame));
 		}
-	    
+
 	    public static extern Sprite orig_GetSpriteForCardBack(string backId);
-	
+
 		public static Sprite GetSpriteForCardBack(string backId)
 		{
 			return GetSprite("cardBacks/", backId);
@@ -44,19 +44,19 @@ namespace CultistSimulator.Modding.mm
 		{
 			return GetSprite("icons40/aspects/", aspectId);
 		}
-	    
+
 	    public static extern Sprite orig_GetSpriteForLegacy(string legacyImage);
-	
+
 		public static Sprite GetSpriteForLegacy(string legacyImage)
 		{
 			return GetSprite("icons100/legacies/", legacyImage);
 		}
-	    
+
 	    public static extern Sprite orig_GetSpriteForEnding(string endingImage);
-	
+
 		public static Sprite GetSpriteForEnding(string endingImage)
 		{
-			return GetSprite("endingArt/", endingImage);
+			return GetSprite("endingArt/en/", endingImage);
 		}
 
 	    private static Sprite GetSprite(string folder, string file)
@@ -72,7 +72,7 @@ namespace CultistSimulator.Modding.mm
 			    return Sprite.Create(
 				    texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 		    }
-		    
+
 		    // Try to load the image from the packed resources next, and show the placeholder if not found
 		    Sprite sprite = Resources.Load<Sprite>(folder + file);
 		    return sprite != null ? sprite : Resources.Load<Sprite>(folder + PLACEHOLDER_IMAGE_NAME);

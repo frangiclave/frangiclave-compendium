@@ -60,6 +60,7 @@ namespace CultistSimulator.Modding.mm
         private static void ExportAssetsToFileSystem()
 		{
 			// Export art
+			LanguageTable.LoadCulture("en");
 			ExportAssetFolderToFileSystem<Sprite>("burnImages/", GetSpriteAsPng, "png");
 			ExportAssetFolderToFileSystem<Sprite>("cardBacks/", GetSpriteAsPng, "png");
 			ExportAssetFolderToFileSystem<Sprite>("elementArt/", GetSpriteAsPng, "png");
