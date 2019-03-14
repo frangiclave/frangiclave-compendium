@@ -1,7 +1,9 @@
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, Union
 
 
-def to_bool(val: str) -> bool:
+def to_bool(val: Union[bool, str]) -> bool:
+    if isinstance(val, bool):
+        return val
     return val == 'true'
 
 

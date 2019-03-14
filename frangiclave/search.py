@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from frangiclave.compendium.deck import Deck, DeckDrawMessage
 from frangiclave.compendium.element import Element
+from frangiclave.compendium.ending import Ending
 from frangiclave.compendium.legacy import Legacy
 from frangiclave.compendium.recipe import Recipe
 from frangiclave.compendium.verb import Verb
@@ -40,6 +41,12 @@ def search_compendium(session: Session, keywords: Optional[str]) -> List[Dict[st
         Element.comments
     ).all()
     results += _find_results(search_keywords, 'element', element_candidates)
+    ending_candidates = session.query(
+        Ending.ending_id,
+        Ending.description,
+        Ending.title
+    ).all()
+    results += _find_results(search_keywords, 'ending', ending_candidates)
     legacy_candidates = session.query(
         Legacy.legacy_id,
         Legacy.label,
