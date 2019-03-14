@@ -23,7 +23,13 @@ class Legacy(Base, GameContentMixin):
     start_description: str = Column(String)
     image: str = Column(String)
     from_ending: str = Column(String)
+    excludes_on_ending: List['LegacyExcludes'] = relationship(
+        'LegacyExcludes',
+        back_populates='legacy',
+        foreign_keys='LegacyExcludes.legacy_id'
+    )
     available_without_ending_match: bool = Column(Boolean)
+    starting_verb_id: str = Column(String)
     effects: List['LegacyEffect'] = relationship('LegacyEffect')
     comments: Optional[str] = Column(String, nullable=True)
 
@@ -41,9 +47,16 @@ class Legacy(Base, GameContentMixin):
         lg.start_description = get(data, 'startdescription')
         lg.image = get(data, 'image')
         lg.from_ending = get(data, 'fromEnding')
+        lg.excludes_on_ending = [
+            LegacyExcludes(
+                legacy=lg,
+                exclude=game_contents.get_legacy(l)
+            ) for l in get(data, 'excludesOnEnding', [])
+        ]
         lg.available_without_ending_match = get(
             data, 'availableWithoutEndingMatch', False, to_bool
         )
+        lg.starting_verb_id = get(data, 'startingVerbId')
         lg.effects = LegacyEffect.from_data(
             get(data, 'effects', {}), game_contents
         )
@@ -74,3 +87,16 @@ class LegacyEffect(Base):
             )
             for element_id, quantity in val.items()
         ]
+
+
+class LegacyExcludes(Base):
+    __tablename__ = 'legacies_excludes'
+
+    id = Column(Integer, primary_key=True)
+    legacy_id = Column(Integer, ForeignKey(Legacy.id))
+    legacy = relationship(
+        Legacy, back_populates='excludes_on_ending', foreign_keys=legacy_id
+    )
+
+    exclude_id: int = Column(Integer, ForeignKey(Legacy.id))
+    exclude: Legacy = relationship(Legacy, foreign_keys=exclude_id)

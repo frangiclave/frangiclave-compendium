@@ -7,15 +7,6 @@ from setuptools import find_packages, setup
 
 from _version import __version__
 
-REQUIRED = [
-    'flask',
-    'sqlalchemy',
-    'toml'
-]
-
-EXTRAS = {
-}
-
 here = os.path.abspath(os.path.dirname(__file__))
 
 with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:

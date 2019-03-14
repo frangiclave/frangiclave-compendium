@@ -80,7 +80,7 @@ def import_game_data(game_dir: str):
         # associated with actual files
         if (content_dir/"endings.json").is_file():
             with (content_dir/"endings.json").open(encoding='utf-8') as f:
-                endings = [Ending.from_data(e) for e in jsom.load(f)]
+                endings = [Ending.from_data(e, game_contents) for e in jsom.load(f)]
             session.add_all(endings)
 
 

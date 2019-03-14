@@ -7,7 +7,8 @@ from sqlalchemy.orm import relationship
 from frangiclave.compendium.base import Base, Session
 from frangiclave.compendium.file import File
 from frangiclave.compendium.game_content import GameContentMixin, GameContents
-from frangiclave.compendium.linked_recipe_details import LinkedRecipeDetails
+from frangiclave.compendium.linked_recipe_details import LinkedRecipeDetails, \
+    LinkedRecipeChallengeRequirement
 from frangiclave.compendium.slot_specification import SlotSpecification
 from frangiclave.compendium.utils import to_bool, get
 
@@ -110,6 +111,7 @@ class Element(Base, GameContentMixin):
     is_hidden: bool = Column(Boolean)
     no_art_needed: bool = Column(Boolean)
     resaturate: bool = Column(Boolean)
+    verb_icon: str = Column(String)
     _in_decks: List['DeckCard'] = relationship(
         'DeckCard', back_populates='element'
     )
@@ -178,7 +180,11 @@ class Element(Base, GameContentMixin):
             ) for aspect_id, quantity in get(data, 'aspects', {}).items()
         ]
         e.induces = [
-            ElementLinkedRecipeDetails.from_data(v, game_contents)
+            ElementLinkedRecipeDetails.from_data(
+                v,
+                ElementLinkedRecipeDetailsChallengeRequirement,
+                game_contents
+            )
             for v in get(data, 'induces', [])
         ]
         e.child_slots = [
@@ -194,6 +200,7 @@ class Element(Base, GameContentMixin):
         e.is_hidden = get(data, 'isHidden', False, to_bool)
         e.no_art_needed = get(data, 'noartneeded', False, to_bool)
         e.resaturate = get(data, 'resaturate', False, to_bool)
+        e.verb_icon = get(data, 'verbicon')
         e.comments = get(data, 'comments', None)
         return e
 
@@ -209,6 +216,24 @@ class ElementLinkedRecipeDetails(Base, LinkedRecipeDetails):
 
     element_id: int = Column(Integer, ForeignKey(Element.id))
     element: Element = relationship(Element, back_populates='induces')
+    challenges = relationship('ElementLinkedRecipeDetailsChallengeRequirement')
+
+
+class ElementLinkedRecipeDetailsChallengeRequirement(
+    Base, LinkedRecipeChallengeRequirement
+):
+    __tablename__ = 'elements_linked_recipe_details_challenge_requirement'
+
+    id = Column(Integer, primary_key=True)
+
+    linked_recipe_details_id: int = Column(
+        Integer, ForeignKey(ElementLinkedRecipeDetails.id))
+    linked_recipe_details: ElementLinkedRecipeDetails = \
+        relationship(
+            ElementLinkedRecipeDetails,
+            back_populates='challenges',
+            foreign_keys=linked_recipe_details_id
+        )
 
 
 class ElementSlotSpecification(Base, SlotSpecification):

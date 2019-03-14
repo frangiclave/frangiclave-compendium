@@ -8,17 +8,18 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
 from frangiclave.compendium.base import Base, Session
+from frangiclave.compendium.deck import Deck
 from frangiclave.compendium.ending_flavour import EndingFlavour
 from frangiclave.compendium.file import File
 from frangiclave.compendium.game_content import GameContentMixin, GameContents
-from frangiclave.compendium.linked_recipe_details import LinkedRecipeDetails
+from frangiclave.compendium.linked_recipe_details import LinkedRecipeDetails, \
+    LinkedRecipeChallengeRequirement
 from frangiclave.compendium.slot_specification import SlotSpecification
 from frangiclave.compendium.utils import to_bool, get
 
 
 if TYPE_CHECKING:
     from frangiclave.compendium.element import Element
-    from frangiclave.compendium.deck import Deck
 
 
 class PortalEffect(Enum):
@@ -51,7 +52,7 @@ class MutationEffect(Base):
         return [
             MutationEffect(
                 filter_on_aspect=game_contents.get_element(
-                    get(v,'filterOnAspectId')
+                    get(v, 'filterOnAspectId')
                 ),
                 mutate_aspect=game_contents.get_element(
                     get(v, 'mutateAspectId')
@@ -83,6 +84,10 @@ class Recipe(Base, GameContentMixin):
         back_populates='recipes'
     )
     requirements: List['RecipeRequirement'] = relationship('RecipeRequirement')
+    table_requirements: List['RecipeTableRequirement'] = relationship(
+        'RecipeTableRequirement')
+    extant_requirements: List['RecipeExtantRequirement'] = relationship(
+        'RecipeExtantRequirement')
     effects: List['RecipeEffect'] = relationship('RecipeEffect')
     aspects: List['RecipeAspect'] = relationship('RecipeAspect')
     mutation_effects: List[MutationEffect] = relationship(
@@ -95,6 +100,10 @@ class Recipe(Base, GameContentMixin):
     hint_only: bool = Column(Boolean)
     warmup: int = Column(Integer)
     deck_effect: List['RecipeDeckEffect'] = relationship('RecipeDeckEffect')
+    internal_deck_id: int = Column(
+        Integer, ForeignKey('decks.id'), nullable=True
+    )
+    internal_deck: Optional['Deck'] = relationship('Deck')
     alternative_recipes: List['RecipeAlternativeRecipeDetails'] = relationship(
         'RecipeAlternativeRecipeDetails',
         back_populates='source_recipe',
@@ -105,10 +114,11 @@ class Recipe(Base, GameContentMixin):
         back_populates='source_recipe',
         foreign_keys='RecipeLinkedRecipeDetails.source_recipe_id'
     )
-    from_alternative_recipes: List['RecipeAlternativeRecipeDetails'] = relationship(
-        'RecipeAlternativeRecipeDetails',
-        foreign_keys='RecipeAlternativeRecipeDetails.recipe_id'
-    )
+    from_alternative_recipes: List['RecipeAlternativeRecipeDetails'] = \
+        relationship(
+            'RecipeAlternativeRecipeDetails',
+            foreign_keys='RecipeAlternativeRecipeDetails.recipe_id'
+        )
     from_linked_recipes: List['RecipeLinkedRecipeDetails'] = relationship(
         'RecipeLinkedRecipeDetails',
         foreign_keys='RecipeLinkedRecipeDetails.recipe_id'
@@ -151,6 +161,12 @@ class Recipe(Base, GameContentMixin):
         r.requirements = RecipeRequirement.from_data(
             get(data, 'requirements', {}), game_contents
         )
+        r.table_requirements = RecipeTableRequirement.from_data(
+            get(data, 'tablereqs', {}), game_contents
+        )
+        r.extant_requirements = RecipeExtantRequirement.from_data(
+            get(data, 'extantreqs', {}), game_contents
+        )
         r.effects = RecipeEffect.from_data(
             get(data, 'effects', {}), game_contents
         )
@@ -176,13 +192,26 @@ class Recipe(Base, GameContentMixin):
         r.deck_effect = RecipeDeckEffect.from_data(
             get(data, 'deckeffect', {}), game_contents
         )
+        internal_deck = get(data, 'internaldeck')
+        if internal_deck:
+            internal_deck['id'] = "internal:" + r.recipe_id
+            r.internal_deck = Deck.from_data(file, internal_deck, game_contents)
+        alternative_recipes = get(data, 'alternativerecipes', [])
+        if not alternative_recipes:
+            alternative_recipes = get(data, 'alt', [])
         r.alternative_recipes = [
-            RecipeAlternativeRecipeDetails.from_data(lrd, game_contents)
-            for lrd in get(data, 'alternativerecipes', [])
+            RecipeAlternativeRecipeDetails.from_data(
+                lrd,
+                RecipeAlternativeRecipeDetailsChallengeRequirement,
+                game_contents
+            ) for lrd in alternative_recipes
         ]
         r.linked_recipes = [
-            RecipeLinkedRecipeDetails.from_data(lrd, game_contents)
-            for lrd in get(data, 'linked', [])
+            RecipeLinkedRecipeDetails.from_data(
+                lrd,
+                RecipeLinkedRecipeDetailsChallengeRequirement,
+                game_contents
+            ) for lrd in get(data, 'linked', [])
         ]
         r.ending_flag = get(data, 'ending')
         r.max_executions = get(data, 'maxexecutions', 0, int)
@@ -196,6 +225,9 @@ class Recipe(Base, GameContentMixin):
         r.signal_important_loop = get(
             data, 'signalimportantloop', False, to_bool
         )
+        r.comments = get(data, 'comments', None)
+        if not r.comments:
+            r.comments = get(data, 'comment', None)
         return r
 
     @classmethod
@@ -269,6 +301,14 @@ class RecipeRequirement(Base, ElementQuantity):
     __tablename__ = 'recipes_requirements'
 
 
+class RecipeTableRequirement(Base, ElementQuantity):
+    __tablename__ = 'recipes_table_requirements'
+
+
+class RecipeExtantRequirement(Base, ElementQuantity):
+    __tablename__ = 'recipes_extant_requirements'
+
+
 class RecipeEffect(Base, ElementQuantity):
     __tablename__ = 'recipes_effects'
 
@@ -292,6 +332,25 @@ class RecipeAlternativeRecipeDetails(Base, LinkedRecipeDetails):
         back_populates='alternative_recipes',
         foreign_keys=source_recipe_id
     )
+    challenges = relationship(
+        'RecipeAlternativeRecipeDetailsChallengeRequirement')
+
+
+class RecipeAlternativeRecipeDetailsChallengeRequirement(
+    Base, LinkedRecipeChallengeRequirement
+):
+    __tablename__ = 'recipes_alternative_recipe_details_challenge_requirement'
+
+    id = Column(Integer, primary_key=True)
+
+    alternative_recipe_details_id: int = Column(
+        Integer, ForeignKey(RecipeAlternativeRecipeDetails.id))
+    alternative_recipe_details: RecipeAlternativeRecipeDetails = \
+        relationship(
+            RecipeAlternativeRecipeDetails,
+            back_populates='challenges',
+            foreign_keys=alternative_recipe_details_id
+        )
 
 
 class RecipeLinkedRecipeDetails(Base, LinkedRecipeDetails):
@@ -305,6 +364,24 @@ class RecipeLinkedRecipeDetails(Base, LinkedRecipeDetails):
         back_populates='linked_recipes',
         foreign_keys=source_recipe_id
     )
+    challenges = relationship('RecipeLinkedRecipeDetailsChallengeRequirement')
+
+
+class RecipeLinkedRecipeDetailsChallengeRequirement(
+    Base, LinkedRecipeChallengeRequirement
+):
+    __tablename__ = 'recipes_linked_recipe_details_challenge_requirement'
+
+    id = Column(Integer, primary_key=True)
+
+    linked_recipe_details_id: int = Column(
+        Integer, ForeignKey(RecipeLinkedRecipeDetails.id))
+    linked_recipe_details: RecipeLinkedRecipeDetails = \
+        relationship(
+            RecipeLinkedRecipeDetails,
+            back_populates='challenges',
+            foreign_keys=linked_recipe_details_id
+        )
 
 
 class RecipeSlotSpecification(Base, SlotSpecification):

@@ -16,64 +16,66 @@
     {% endif %}
     <span id="content-title-prefix">Element:</span> {{ element.element_id }}
 </h2>
-    {% if element.is_aspect %}
-        <img src="{{ base_url }}/static/images/icons40/aspects/{{ element.icon or element.element_id }}.png" class="content-image" width="40" height="40" onerror="this.src='{{ base_url }}/static/images/icons40/aspects/_x.png'" />
-    {% elif not element.no_art_needed %}
-        <img src="{{ base_url }}/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
-    {% endif %}
+{% if element.is_aspect %}
+    <img src="{{ base_url }}/static/images/icons40/aspects/{{ element.icon or element.element_id }}.png" class="content-image" width="40" height="40" onerror="this.src='{{ base_url }}/static/images/icons40/aspects/_x.png'" />
+{% elif not element.no_art_needed %}
+    <img src="{{ base_url }}/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
+{% endif %}
 
-    <p><strong>Label:</strong> {% if element.label %}{{ element.label }}{% else %}<em>None</em>{% endif %}</p>
+<p><strong>Label:</strong> {% if element.label %}{{ element.label }}{% else %}<em>None</em>{% endif %}</p>
 
-    <p><strong>Description:</strong> {% if element.description %}{{ element.description|safe }}{% else %}<em>None</em>{% endif %}</p>
+<p><strong>Description:</strong> {% if element.description %}{{ element.description|safe }}{% else %}<em>None</em>{% endif %}</p>
 
-    <p><strong>Aspects:</strong> {{ m.aspect_list(element.aspects) }}</p>
+<p><strong>Aspects:</strong> {{ m.aspect_list(element.aspects) }}</p>
 
-    <p><strong>Induces:</strong> {% if not element.induces %}<em>Nothing</em>{% endif %}</p>
-    <ul>{% for recipe in element.induces %}<li>{{ m.recipe(recipe.recipe.recipe_id) }} (chance: {{ recipe.chance }}%{% if recipe.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+<p><strong>Induces:</strong> {% if not element.induces %}<em>Nothing</em>{% endif %}</p>
+{{ m.linked_recipe_details(element.induces) }}
 
-    <p><strong>Slots:</strong> {% if not element.child_slots %}<em>None</em>{% endif %}</p>
-    {{ m.slot_specifications(element.child_slots) }}
+<p><strong>Slots:</strong> {% if not element.child_slots %}<em>None</em>{% endif %}</p>
+{{ m.slot_specifications(element.child_slots) }}
 
-    <p><strong>Cross Triggers:</strong> {% if not element.x_triggers %}<em>None</em>{% endif %}</p>
-    <ul>{% for x in element.x_triggers %}<li>{{ m.element(x.trigger.element_id) }} -> {{ m.element(x.result.element_id) }}</li>{% endfor %}</ul>
+<p><strong>Cross Triggers:</strong> {% if not element.x_triggers %}<em>None</em>{% endif %}</p>
+<ul>{% for x in element.x_triggers %}<li>{{ m.element(x.trigger.element_id) }} -> {{ m.element(x.result.element_id) }}</li>{% endfor %}</ul>
 
-    <p><strong>Triggered By:</strong> {% if not element.triggered_by %}<em>None</em>{% endif %}</p>
-    <ul>{% for x in element.triggered_by %}<li>{{ m.element(x.trigger.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
+<p><strong>Triggered By:</strong> {% if not element.triggered_by %}<em>None</em>{% endif %}</p>
+<ul>{% for x in element.triggered_by %}<li>{{ m.element(x.trigger.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
 
-    <p><strong>Triggered With:</strong> {% if not element.triggered_with %}<em>None</em>{% endif %}</p>
-    <ul>{% for x in element.triggered_with %}<li>{{ m.element(x.result.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
+<p><strong>Triggered With:</strong> {% if not element.triggered_with %}<em>None</em>{% endif %}</p>
+<ul>{% for x in element.triggered_with %}<li>{{ m.element(x.result.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>
 
-    <p><strong>Requirement for Recipes:</strong> {% if not element.requirement_for_recipes %}<em>None</em>{% endif %}</p>
-    <ul>{% for recipe in element.requirement_for_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
+<p><strong>Requirement for Recipes:</strong> {% if not element.requirement_for_recipes %}<em>None</em>{% endif %}</p>
+<ul>{% for recipe in element.requirement_for_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
 
-    <p><strong>Effect of Recipes:</strong> {% if not element.effect_of_recipes %}<em>None</em>{% endif %}</p>
-    <ul>{% for recipe in element.effect_of_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
+<p><strong>Effect of Recipes:</strong> {% if not element.effect_of_recipes %}<em>None</em>{% endif %}</p>
+<ul>{% for recipe in element.effect_of_recipes %}<li>{{ m.recipe(recipe.recipe_id) }}</li>{% endfor %}</ul>
 
-    <p><strong>Lifetime:</strong> {% if element.lifetime %}{{ element.lifetime }}{% else %}<em>None</em>{% endif %}</p>
+<p><strong>Lifetime:</strong> {% if element.lifetime %}{{ element.lifetime }}{% else %}<em>None</em>{% endif %}</p>
 
-    <p><strong>Decay To:</strong> {{ m.element(element.decay_to.element_id) }}</p>
+<p><strong>Decay To:</strong> {{ m.element(element.decay_to.element_id) }}</p>
 
-    <p><strong>Decay From:</strong> {% if not element.decay_from %}<em>None</em>{% endif %}</p>
-    <ul>{% for e in element.decay_from %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
+<p><strong>Decay From:</strong> {% if not element.decay_from %}<em>None</em>{% endif %}</p>
+<ul>{% for e in element.decay_from %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
 
-    <p><strong>Aspect?</strong> {% if element.is_aspect %}Yes{% else %}No{% endif %}</p>
-    <ul>{% for e in element.aspect_for %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
+<p><strong>Aspect?</strong> {% if element.is_aspect %}Yes{% else %}No{% endif %}</p>
+<ul>{% for e in element.aspect_for %}<li>{{ m.element(e.element_id) }}</li>{% endfor %}</ul>
 
-    <p><strong>Unique?</strong> {% if element.unique %}Yes{% else %}No{% endif %}</p>
+<p><strong>Unique?</strong> {% if element.unique %}Yes{% else %}No{% endif %}</p>
 
-    <p><strong>Uniqueness Group:</strong> {{ m.optional(element.uniqueness_group) }}</p>
+<p><strong>Uniqueness Group:</strong> {{ m.optional(element.uniqueness_group) }}</p>
 
-    <p><strong>Hidden?</strong> {{ m.yes_no(element.is_hidden) }}</p>
+<p><strong>Hidden?</strong> {{ m.yes_no(element.is_hidden) }}</p>
 
-    <p><strong>No Art Needed?</strong> {{ m.yes_no(element.no_art_needed) }}</p>
+<p><strong>No Art Needed?</strong> {{ m.yes_no(element.no_art_needed) }}</p>
 
-    <p><strong>Resaturate?</strong> {{ m.yes_no(element.resaturate) }}</p>
+<p><strong>Resaturate?</strong> {{ m.yes_no(element.resaturate) }}</p>
 
-    <p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>
+<p><strong>Override Verb Icon:</strong> {{ m.optional(element.verb_icon) }}</p>
 
-    <p><strong>In Decks:</strong> {% if not element.in_decks and not element.in_decks_default %}<em>None</em>{% endif %}</p>
-    <ul>{% for deck in element.in_decks %}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
+<p><strong>Animation Frames:</strong> {{ element.animation_frames }}</p>
 
-    <p><strong>Comments:</strong> {{ m.optional(element.comments) }}</p>
+<p><strong>In Decks:</strong> {% if not element.in_decks and not element.in_decks_default %}<em>None</em>{% endif %}</p>
+<ul>{% for deck in element.in_decks %}<li>{{ m.deck(deck.deck_id) }}</li>{% endfor %}</ul>
+
+<p><strong>Comments:</strong> {{ m.optional(element.comments) }}</p>
 {% endblock %}
 

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Dict, List, Optional, Any, Tuple
 
-from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Table
+from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 

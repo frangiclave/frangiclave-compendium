@@ -27,7 +27,12 @@
 
 <p><strong>From Ending:</strong> {{ legacy.from_ending }}</p>
 
+<p><strong>Excludes on Ending:</strong> {% if not legacy.excludes_on_ending %}<em>None</em>{% endif %}</p>
+<ul>{% for e in legacy.excludes_on_ending %}<li>{{ m.legacy(e.exclude.legacy_id) }}</li>{% endfor %}</ul>
+
 <p><strong>Available Without Ending Match?</strong> {{ m.yes_no(legacy.available_without_ending_match) }}</p>
+
+<p><strong>Starting Verb ID:</strong> {{ m.optional(legacy.starting_verb_id) }}</p>
 
 <p><strong>Legacy Effect:</strong> {{ m.element_list(legacy.effects) }}</p>
 

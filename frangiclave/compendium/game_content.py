@@ -15,6 +15,7 @@ class GameContents:
         self.legacies = {}
         self.recipes = {}
         self.verbs = {}
+        self.endings = {}
 
     def get_deck(self, deck_id):
         if not deck_id:
@@ -60,6 +61,15 @@ class GameContents:
         from frangiclave.compendium.verb import Verb
         self.verbs[verb_id] = Verb(verb_id=verb_id)
         return self.verbs[verb_id]
+
+    def get_ending(self, ending_id):
+        if not ending_id:
+            return None
+        if ending_id in self.endings:
+            return self.endings[ending_id]
+        from frangiclave.compendium.ending import Ending
+        self.endings[ending_id] = Ending(ending_id=ending_id)
+        return self.endings[ending_id]
 
 
 class GameContentMixin:

@@ -14,9 +14,13 @@
 
 {% macro aspect(a) -%}<a href="{{ base_url }}/element/{{ a.aspect.element_id }}/" class="aspect"><span class="aspect-text">{{ a.quantity }}</span>{{ icons40(a.aspect) }}</a>{%- endmacro %}
 {% macro item(i) -%}<a href="{{ base_url }}/element/{{ i.element.element_id }}/" class="aspect"><span class="aspect-text">{{ i.quantity }}</span>{{ icons40(i.element) }}</a>{%- endmacro %}
+{% macro challenge(c) -%}<a href="{{ base_url }}/element/{{ c.element.element_id }}/" class="challenge">{{ icons40(c.element) }}</a>{% if c.convention == 'advance' %} (adv.){% endif %}{%- endmacro %}
 
 {% macro aspect_list(aspects) -%}{% if aspects %}{% for a in aspects %}{{ element_quantity(a.aspect, a.quantity) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
 {% macro element_list(elements) -%}{% if elements %}{% for e in elements %}{{ element_quantity(e.element, e.quantity) }}{% endfor %}{% else %}<em>None</em>{% endif %}{%- endmacro %}
+
+{% macro linked_recipe_details(recipe_details_list) -%}<ul>{% for r in recipe_details_list %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %}{% if r.challenges %}, challenges:{% for req in r.challenges %}{{ challenge(req) }}{% endfor %}{% endif %})</li>{% endfor %}</ul>
+{%- endmacro %}
 
 {% macro multiline(string) -%}<span class="multiline">{{ string }}</span>{%- endmacro %}
 {% macro yes_no(boolean) -%}{% if boolean %}Yes{% else %}No{% endif %}{%- endmacro %}

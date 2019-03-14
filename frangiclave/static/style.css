@@ -269,6 +269,13 @@ footer {
     margin-left: 10px;
 }
 
+#content .challenge img {
+    height: 1em;
+    margin-left: 5px;
+    vertical-align: middle;
+    width: 1em;
+}
+
 #content h3 {
     border-left: solid 0.2em #866a86;
     border-top: solid 0.1em #866a86;

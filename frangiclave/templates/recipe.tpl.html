@@ -31,6 +31,10 @@
 
 <p><strong>Requirements:</strong> {{ m.element_list(recipe.requirements) }}</p>
 
+<p><strong>Table Requirements:</strong> {{ m.element_list(recipe.table_requirements) }}</p>
+
+<p><strong>Extant Requirements:</strong> {{ m.element_list(recipe.extant_requirements) }}</p>
+
 <p><strong>Effects:</strong> {{ m.element_list(recipe.effects) }}</p>
 
 <p><strong>Aspects:</strong> {{ m.element_list(recipe.aspects) }}</p>
@@ -45,10 +49,10 @@
 </ul>
 
 <p><strong>Alternative Recipes:</strong> {% if not recipe.alternative_recipes %}<em>Nothing</em>{% endif %}</p>
-<ul>{% for r in recipe.alternative_recipes %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+{{ m.linked_recipe_details(recipe.alternative_recipes) }}
 
 <p><strong>Linked Recipes:</strong> {% if not recipe.linked_recipes %}<em>Nothing</em>{% endif %}</p>
-<ul>{% for r in recipe.linked_recipes %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %})</li>{% endfor %}</ul>
+{{ m.linked_recipe_details(recipe.linked_recipes) }}
 
 <p><strong>From Recipes:</strong> {% if not recipe.from_recipes %}<em>Nothing</em>{% endif %}</p>
 <ul>{% for r in recipe.from_recipes %}<li>{{ m.recipe(r.recipe_id) }}</li>{% endfor %}</ul>
@@ -61,6 +65,8 @@
 <p><strong>Maximum Executions: </strong> {{ recipe.max_executions }}</p>
 
 <p><strong>Deck Effect:</strong> {% if recipe.deck_effect %}<ul>{% for d in recipe.deck_effect %}<li>{{ m.deck(d.deck.deck_id) }}: {{ d.quantity }}</li>{% endfor %}</ul>{% else %}<em>None</em>{% endif %}</p>
+
+<p><strong>Internal Deck:</strong> {{ m.deck(recipe.internal_deck) }}</p>
 
 <p><strong>Ending Flag:</strong> {{ m.ending(recipe.ending_flag) }}</p>
 
