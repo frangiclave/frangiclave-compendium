@@ -287,6 +287,12 @@ footer {
     white-space: pre-wrap;
 }
 
+#content .multiline img{
+    height: 1em;
+    vertical-align: middle;
+    width: 1em;
+}
+
 #content ul {
     list-style: none;
     padding: 0 1em;

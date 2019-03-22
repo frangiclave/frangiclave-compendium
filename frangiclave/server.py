@@ -1,7 +1,9 @@
+import re
 from collections import OrderedDict, defaultdict
 from os.path import abspath, dirname, join
 
 from flask import Flask, render_template, abort, request
+from markupsafe import Markup
 from sqlalchemy.orm.exc import NoResultFound
 
 from frangiclave.compendium.base import get_session
@@ -18,6 +20,7 @@ from frangiclave.search import search_compendium
 ROOT_DIR = abspath(dirname(__file__))
 STATIC_DIR = join(ROOT_DIR, 'static')
 TEMPLATE_DIR = join(ROOT_DIR, 'templates')
+SPRITE_PATTERN = re.compile(r'<sprite name=([a-z]+)>')
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
 
@@ -194,3 +197,14 @@ def add_global_variables():
         recipes_open=False,
         verbs_open=False
     )
+
+
+@app.template_filter('sprite_replace')
+def sprite_replace(text):
+    return Markup(SPRITE_PATTERN.sub(
+        lambda m: r'<img src="'
+                  + app.config['BASE_URL']
+                  + '/static/images/icons40/aspects/'
+                  + m.group(1)
+                  + r'.png" width="30" height="30" />',
+        text))
