@@ -9,3 +9,5 @@ GAME_DIRECTORY = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Cultist Sim
 IMAGES_DIRECTORY = "images"
 
 READ_ONLY = false
+
+SLACK_BOT_TOKEN = ""

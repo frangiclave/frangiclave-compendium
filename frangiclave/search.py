@@ -73,6 +73,48 @@ def search_compendium(session: Session, keywords: Optional[str]) -> List[Dict[st
     return results
 
 
+def search_compendium_by_id(session: Session, item_id: str) -> Optional[Any]:
+    results = []
+    results += session.query(Deck).filter(Deck.deck_id.contains(item_id)).all()
+    results += session.query(Element).filter(Element.element_id.contains(item_id)).all()
+    results += session.query(Ending).filter(Ending.ending_id.contains(item_id)).all()
+    results += session.query(Legacy).filter(Legacy.legacy_id.contains(item_id)).all()
+    results += session.query(Recipe).filter(Recipe.recipe_id.contains(item_id)).all()
+    results += session.query(Verb).filter(Verb.verb_id.contains(item_id)).all()
+
+    if not results:
+        return None
+
+    best_candidate = None
+    best_candidate_id = None
+    for result in results:
+        if isinstance(result, Deck):
+            result_id = result.deck_id
+        elif isinstance(result, Element):
+            result_id = result.element_id
+        elif isinstance(result, Ending):
+            result_id = result.ending_id
+        elif isinstance(result, Legacy):
+            result_id = result.legacy_id
+        elif isinstance(result, Recipe):
+            result_id = result.recipe_id
+        elif isinstance(result, Verb):
+            result_id = result.verb_id
+        else:
+            continue
+
+        # Return exact matches immediately
+        if result_id == item_id:
+            return result
+
+        # Return the closest match in terms of length otherwise
+        if not best_candidate or len(result_id) < len(best_candidate_id):
+            best_candidate = result
+            best_candidate_id = result_id
+
+    return best_candidate
+
+
 def _find_results(
         keywords: str,
         _type: str,

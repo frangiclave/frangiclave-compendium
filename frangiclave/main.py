@@ -1,14 +1,6 @@
-import toml
-
 from frangiclave.compendium.base import Base
+from frangiclave.config import DEFAULT_CONFIG_FILE_NAME, load_config
 from frangiclave.server import app
-
-CONFIG_FILE_NAME = 'config.toml'
-
-
-def load_config(config_file_name):
-    with open(config_file_name) as config_file:
-        return toml.load(config_file)
 
 
 def init_db():
@@ -22,7 +14,7 @@ def init_db():
 
 def init():
     # Load the configuration
-    config = load_config(CONFIG_FILE_NAME)
+    config = load_config(DEFAULT_CONFIG_FILE_NAME)
 
     # Initialize the database connection
     init_db()

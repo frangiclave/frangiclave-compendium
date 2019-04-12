@@ -23,6 +23,7 @@ setup(
     packages=find_packages(exclude=('tests',)),
     install_requires=[
         'flask',
+        'slackclient',
         'sqlalchemy',
         'toml',
         'jsom==0.0.5'
