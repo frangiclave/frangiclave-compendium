@@ -24,37 +24,7 @@ namespace CultistSimulator.Modding.mm
             {
                 return;
             }
-            ExportEndingsToFileSystem();
 	        ExportAssetsToFileSystem();
-        }
-
-        private static void ExportEndingsToFileSystem()
-        {
-	        LanguageTable.LoadCulture("en");
-	        Compendium compendium = new Compendium();
-	        ContentImporter contentImporter = new ContentImporter();
-	        contentImporter.PopulateCompendium(compendium);
-
-	        List<EndingData> endings = new List<EndingData>();
-	        HashSet<string> encounteredEndingIds = new HashSet<string>();
-	        foreach (var recipe in compendium.GetAllRecipesAsList())
-	        {
-		        if (string.IsNullOrEmpty(recipe.EndingFlag))
-		        {
-			        continue;
-		        }
-		        Ending ending = compendium.GetEndingById(recipe.EndingFlag);
-		        if (ending == null || encounteredEndingIds.Contains(ending.Id))
-		        {
-			        continue;
-		        }
-			    endings.Add(new EndingData(ending));
-			    encounteredEndingIds.Add(ending.Id);
-	        }
-
-	        string exportFile = Path.Combine(Path.Combine(ExportDir, "content"), "endings.json");
-	        string json = "[" + string.Join(", ", endings.Select(JsonUtility.ToJson).ToArray()) + "]";
-	        File.WriteAllText(exportFile, json);
         }
 
         private static void ExportAssetsToFileSystem()
