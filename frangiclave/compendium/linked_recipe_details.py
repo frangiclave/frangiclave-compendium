@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, Type, List
+from typing import TYPE_CHECKING, Any, Dict, Type, List, Union
 
 from sqlalchemy import Column, ForeignKey, Integer, Boolean, String
 from sqlalchemy.ext.declarative import declared_attr
@@ -59,7 +59,7 @@ class LinkedRecipeChallengeRequirement:
 
     @classmethod
     def from_data(
-            cls, val: Dict[str, str], game_contents: GameContents
+            cls, val: Union[str, Dict[str, str]], game_contents: GameContents
     ) -> List['LinkedRecipeChallengeRequirement']:
         return [
             cls(
@@ -67,4 +67,9 @@ class LinkedRecipeChallengeRequirement:
                 convention=convention
             )
             for element_id, convention in val.items()
+        ] if isinstance(val, dict) else [
+            cls(
+                element=game_contents.get_element(val),
+                convention='base'
+            )
         ]

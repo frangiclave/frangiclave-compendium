@@ -5,3 +5,5 @@ class EndingFlavour(Enum):
     NONE = 'None'
     GRAND = 'Grand'
     MELANCHOLY = 'Melancholy'
+    PALE = 'Pale'
+    VILE = 'Vile'

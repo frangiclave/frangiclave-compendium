@@ -28,12 +28,12 @@ class Ending(Base):
             game_contents: GameContents
     ) -> 'Ending':
         e = game_contents.get_ending(get(data, 'id'))
-        e.title = get(data, 'title')
+        e.title = get(data, 'label')
         e.description = get(data, 'description')
-        e.image = get(data, 'imageId')
-        e.flavour = EndingFlavour(get(data, 'endingFlavour', 'None'))
+        e.image = get(data, 'image')
+        e.flavour = EndingFlavour(get(data, 'flavour', 'None'))
         e.animation = get(data, 'anim')
-        e.achievement = get(data, 'achievementId')
+        e.achievement = get(data, 'achievement')
         return e
 
     @classmethod
