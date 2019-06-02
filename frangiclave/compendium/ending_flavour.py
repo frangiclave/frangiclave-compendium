@@ -7,3 +7,4 @@ class EndingFlavour(Enum):
     MELANCHOLY = 'Melancholy'
     PALE = 'Pale'
     VILE = 'Vile'
+    XXX = 'XXX'

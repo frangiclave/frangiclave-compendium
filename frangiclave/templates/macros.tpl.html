@@ -5,7 +5,7 @@
 {% macro recipe(id) -%}{{ optional_link('/recipe/', id) }}{%- endmacro %}
 {% macro verb(id) -%}{{ optional_link('/verb/', id) }}{%- endmacro %}
 
-{% macro element_quantity(element, quantity) -%}<a href="{{ base_url }}/element/{{ element.element_id }}/" class="aspect" name="{{ element.label }}"><span class="aspect-text">{{ quantity }}</span>{% if element.is_aspect %}{{ icons40(element) }}{% else %}{{ elementArt(element) }}{% endif %}</a>{%- endmacro %}
+{% macro element_quantity(element, quantity) -%}<a href="{{ base_url }}/element/{{ element.element_id }}/" class="aspect" title="{{ element.label }}"><span class="aspect-text">{{ quantity }}</span>{% if element.is_aspect %}{{ icons40(element) }}{% else %}{{ elementArt(element) }}{% endif %}</a>{%- endmacro %}
 
 
 {% macro image(folder, element) -%}<img src="{{ base_url }}/static/images/{{ folder }}/{% if element.icon %}{{ element.icon }}{% else %}{{ element.element_id }}{% endif %}.png" width="30" height="30" onerror="this.src='{{ base_url }}/static/images/{{ folder }}/_x.png'" />{%- endmacro %}

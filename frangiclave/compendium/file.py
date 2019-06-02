@@ -8,6 +8,7 @@ from frangiclave.compendium.base import Base
 class FileCategory(Enum):
     DECKS = 'decks'
     ELEMENTS = 'elements'
+    ENDINGS = 'endings'
     LEGACIES = 'legacies'
     RECIPES = 'recipes'
     VERBS = 'verbs'

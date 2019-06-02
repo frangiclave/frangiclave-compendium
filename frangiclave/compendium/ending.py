@@ -4,6 +4,7 @@ from sqlalchemy import Column, Enum as EnumType, String, Integer
 
 from frangiclave.compendium.base import Base, Session
 from frangiclave.compendium.ending_flavour import EndingFlavour
+from frangiclave.compendium.file import File
 from frangiclave.compendium.game_content import GameContents
 from frangiclave.compendium.utils import get
 
@@ -24,10 +25,12 @@ class Ending(Base):
     @classmethod
     def from_data(
             cls,
+            file: File,
             data: Dict[str, Any],
             game_contents: GameContents
     ) -> 'Ending':
         e = game_contents.get_ending(get(data, 'id'))
+        e.file = file
         e.title = get(data, 'label')
         e.description = get(data, 'description')
         e.image = get(data, 'image')

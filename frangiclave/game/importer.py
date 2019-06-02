@@ -45,6 +45,13 @@ def import_game_data(game_dir: str):
                 FileCategory.ELEMENTS,
                 game_contents
             )
+            endings = _load_content(
+                Ending,
+                content_dir,
+                group,
+                FileCategory.ENDINGS,
+                game_contents
+            )
             legacies = _load_content(
                 Legacy,
                 content_dir,
@@ -72,16 +79,10 @@ def import_game_data(game_dir: str):
 
             session.add_all(decks)
             session.add_all(elements)
+            session.add_all(endings)
             session.add_all(legacies)
             session.add_all(recipes)
             session.add_all(verbs)
-
-        # Load endings a bit differently from the rest, since they are not
-        # associated with actual files
-        if (content_dir/"endings.json").is_file():
-            with (content_dir/"endings.json").open(encoding='utf-8') as f:
-                endings = [Ending.from_data(e, game_contents) for e in jsom.load(f)]
-            session.add_all(endings)
 
 
 def _load_content(
