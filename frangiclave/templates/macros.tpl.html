@@ -22,7 +22,7 @@
 {% macro linked_recipe_details(recipe_details_list) -%}<ul>{% for r in recipe_details_list %}<li>{{ m.recipe(r.recipe.recipe_id) }} (chance: {{ r.chance }}%{% if r.additional %}, additional{% endif %}{% if r.challenges %}, challenges:{% for req in r.challenges %}{{ challenge(req) }}{% endfor %}{% endif %})</li>{% endfor %}</ul>
 {%- endmacro %}
 
-{% macro multiline(string) -%}<span class="multiline">{{ string | sprite_replace }}</span>{%- endmacro %}
+{% macro multiline(string) -%}<span class="multiline">{{ string | sprite_replace | safe }}</span>{%- endmacro %}
 {% macro yes_no(boolean) -%}{% if boolean %}Yes{% else %}No{% endif %}{%- endmacro %}
 {% macro optional(value) -%}{% if value %}{{ value }}{% else %}<em>None</em>{% endif %}{%- endmacro %}
 {% macro optional_link(link_base, id) -%}{% if id %}<a href="{{ base_url}}{{ link_base + id }}">{{ id }}</a>{% else %}<em>None</em>{% endif %}{%- endmacro %}
@@ -31,8 +31,8 @@
 <ul>
     {% for slot in specs %}
     <li>
-        <strong>Label:</strong> {{ slot.label }}<br />
-        <strong>Description:</strong> {{ slot.description }}<br />
+        <strong>Label:</strong> {{ m.localised(slot.label) }}<br />
+        <strong>Description:</strong> {{ m.localised(slot.description) }}<br />
         <strong>Aspects:</strong> {{ element_list(slot.required) }}<br />
         <strong>Forbidden:</strong> {{ element_list(slot.forbidden) }}<br />
         <strong>Greedy?</strong> {% if slot.greedy %}Yes{% else %}No{% endif %}<br />
@@ -67,3 +67,20 @@
 </div>
 {% endfor %}
 {%- endmacro %}
+
+
+{% macro localised(string, multi=False) -%}
+{% if string %}
+<ul>
+{% for translation in string.split('$$') %}
+    {% if multi %}
+        <li>{{ multiline(translation) }}</li>
+    {% else %}
+        <li>{{ translation }}</li>
+    {% endif %}
+{% endfor %}
+</ul>
+{% else %}
+<em>None</em>
+{% endif %}
+{% endmacro %}

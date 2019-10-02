@@ -87,6 +87,7 @@ class GameContentMixin:
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ):
         raise NotImplementedError

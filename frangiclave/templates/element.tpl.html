@@ -22,9 +22,9 @@
     <img src="{{ base_url }}/static/images/elementArt/{{ element.icon or element.element_id }}.png" class="content-image" width="128" height="128" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
 {% endif %}
 
-<p><strong>Label:</strong> {% if element.label %}{{ element.label }}{% else %}<em>None</em>{% endif %}</p>
+<p><strong>Label:</strong> {{ m.localised(element.label) }}</p>
 
-<p><strong>Description:</strong> {% if element.description %}{{ element.description|safe }}{% else %}<em>None</em>{% endif %}</p>
+<p><strong>Description:</strong> {{ m.localised(element.description) }}</p>
 
 <p><strong>Aspects:</strong> {{ m.aspect_list(element.aspects) }}</p>
 

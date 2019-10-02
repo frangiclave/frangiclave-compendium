@@ -35,16 +35,23 @@ class Verb(Base, GameContentMixin):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ):
         r = game_contents.get_verb(data['id'])
         r.file = file
-        r.label = get(data, 'label')
-        r.description = get(data, 'description')
+        r.label = get(data, 'label', translations=translations)
+        r.description = get(data, 'description', translations=translations)
         r.at_start = get(data, 'atStart', False, to_bool)
         if 'slots' in data and data['slots']:
             r.primary_slot_specification = VerbSlotSpecification.from_data(
-                data['slots'][0], game_contents
+                data['slots'][0],
+                {
+                    c: c_transformation["slots"][0]
+                    for c, c_transformation in translations.items()
+                    if "slots" in c_transformation
+                },
+                game_contents
             )
         r.comments = get(data, 'comments', None)
         return r

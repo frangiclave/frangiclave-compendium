@@ -159,12 +159,13 @@ class Element(Base, GameContentMixin):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'Element':
         e = game_contents.get_element(data['id'])
         e.file = file
-        e.label = get(data, 'label')
-        e.description = get(data, 'description')
+        e.label = get(data, 'label', translations=translations)
+        e.description = get(data, 'description', translations=translations)
         e.animation_frames = get(data, 'animFrames', 0, int)
         e.icon = get(data, 'icon')
         e.lifetime = get(data, 'lifetime', 0.0, float)
@@ -188,8 +189,12 @@ class Element(Base, GameContentMixin):
             for v in get(data, 'induces', [])
         ]
         e.child_slots = [
-            ElementSlotSpecification.from_data(v, game_contents)
-            for v in get(data, 'slots', [])
+            ElementSlotSpecification.from_data(v, {
+                c: c_transformation["slots"][i]
+                for c, c_transformation in translations.items()
+                if "slots" in c_transformation
+            }, game_contents)
+            for i, v in enumerate(get(data, 'slots', []))
         ]
         e.x_triggers = [
             ElementXTrigger(

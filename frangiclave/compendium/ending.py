@@ -27,12 +27,13 @@ class Ending(Base):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'Ending':
         e = game_contents.get_ending(get(data, 'id'))
         e.file = file
-        e.title = get(data, 'label')
-        e.description = get(data, 'description')
+        e.title = get(data, 'label', translations=translations)
+        e.description = get(data, 'description', translations=translations)
         e.image = get(data, 'image')
         e.flavour = EndingFlavour(get(data, 'flavour', 'None'))
         e.animation = get(data, 'anim')

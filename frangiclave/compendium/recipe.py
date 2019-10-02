@@ -150,13 +150,14 @@ class Recipe(Base, GameContentMixin):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'Recipe':
         r = game_contents.get_recipe(data['id'])
         r.file = file
-        r.label = get(data, 'label', data['id'])
-        r.start_description = get(data, 'startdescription')
-        r.description = get(data, 'description')
+        r.label = get(data, 'label', data['id'], translations=translations)
+        r.start_description = get(data, 'startdescription', translations=translations)
+        r.description = get(data, 'description', translations=translations)
         r.action = game_contents.get_verb(get(data, 'actionId'))
         r.requirements = RecipeRequirement.from_data(
             get(data, 'requirements', {}), game_contents
@@ -195,7 +196,9 @@ class Recipe(Base, GameContentMixin):
         internal_deck = get(data, 'internaldeck')
         if internal_deck:
             internal_deck['id'] = "internal:" + r.recipe_id
-            r.internal_deck = Deck.from_data(file, internal_deck, game_contents)
+            r.internal_deck = Deck.from_data(
+                file, internal_deck, {}, game_contents
+            )
         alternative_recipes = get(data, 'alternativerecipes', [])
         if not alternative_recipes:
             alternative_recipes = get(data, 'alt', [])
@@ -220,8 +223,12 @@ class Recipe(Base, GameContentMixin):
             get(data, 'portaleffect', 'none').lower()
         )
         r.slot_specifications = [
-            RecipeSlotSpecification.from_data(v, game_contents)
-            for v in get(data, 'slots', [])]
+            RecipeSlotSpecification.from_data(v, {
+                c: c_transformation["slots"][i]
+                for c, c_transformation in translations.items()
+                if "slots" in c_transformation
+            }, game_contents)
+            for i, v in enumerate(get(data, 'slots', []))]
         r.signal_important_loop = get(
             data, 'signalimportantloop', False, to_bool
         )

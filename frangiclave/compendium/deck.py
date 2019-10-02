@@ -68,6 +68,7 @@ class Deck(Base, GameContentMixin):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'Deck':
         d = game_contents.get_deck(data['id'])
@@ -80,17 +81,23 @@ class Deck(Base, GameContentMixin):
             get(data, 'defaultcard', None)
         )
         d.reset_on_exhaustion = get(data, 'resetonexhaustion', False, to_bool)
-        d.label = get(data, 'label', None)
-        d.description = get(data, 'description', None)
+        d.label = get(data, 'label', None, translations=translations)
+        d.description = get(
+            data, 'description', None, translations=translations
+        )
         d.all_draw_messages = [
             DeckDrawMessage(
                 element=game_contents.get_element(element_id),
-                message=message
+                message=message + cls._get_draw_message_loc(
+                    translations, element_id
+                )
             ) for element_id, message in get(data, 'drawmessages', {}).items()
         ] + [
             DeckDrawMessage(
                 element=game_contents.get_element(element_id),
-                message=message,
+                message=message + cls._get_draw_message_loc(
+                    translations, element_id
+                ),
                 default=True
             ) for element_id, message in get(
                 data, 'defaultdrawmessages', {}
@@ -102,6 +109,17 @@ class Deck(Base, GameContentMixin):
     @classmethod
     def get_by_deck_id(cls, session: Session, deck_id: str) -> 'Deck':
         return session.query(cls).filter(cls.deck_id == deck_id).one()
+
+    @staticmethod
+    def _get_draw_message_loc(translations, element_id):
+        string = ''
+        for culture, translation in translations.items():
+            if 'drawmessages' in translation \
+                    and element_id in translation['drawmessages']\
+                    and translation['drawmessages'][element_id]:
+                string += \
+                    f'$${translation["drawmessages"][element_id]}'
+        return string
 
 
 class DeckDrawMessage(Base):

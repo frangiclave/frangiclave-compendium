@@ -19,11 +19,11 @@
 
 <img src="{{ base_url }}/static/images/icons100/legacies/{{ legacy.image }}.png" class="content-image" width="100" height="100" onerror="this.src='{{ base_url }}/static/images/elementArt/_x.png'" />
 
-<p><strong>Label:</strong> {{ m.optional(legacy.label) }}</p>
+<p><strong>Label:</strong> {{ m.localised(legacy.label) }}</p>
 
-<p><strong>Start Description:</strong> {{ m.multiline(m.optional(legacy.start_description|safe)) }}</p>
+<p><strong>Start Description:</strong> {{ m.localised(legacy.start_description, True) }}</p>
 
-<p><strong>Description:</strong> {{ m.multiline(m.optional(legacy.description|safe)) }}</p>
+<p><strong>Description:</strong> {{ m.localised(legacy.description, True) }}</p>
 
 <p><strong>From Ending:</strong> {{ legacy.from_ending }}</p>
 

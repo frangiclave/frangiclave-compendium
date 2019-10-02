@@ -38,13 +38,16 @@ class Legacy(Base, GameContentMixin):
             cls,
             file: File,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'Legacy':
         lg = game_contents.get_legacy(data['id'])
         lg.file = file
-        lg.label = get(data, 'label')
-        lg.description = get(data, 'description')
-        lg.start_description = get(data, 'startdescription')
+        lg.label = get(data, 'label', translations=translations)
+        lg.description = get(data, 'description', translations=translations)
+        lg.start_description = get(
+            data, 'startdescription', translations=translations
+        )
         lg.image = get(data, 'image')
         lg.from_ending = get(data, 'fromEnding')
         lg.excludes_on_ending = [

@@ -17,18 +17,18 @@
     <span id="content-title-prefix">Deck:</span> {{ deck.deck_id }}
 </h2>
 
-<p><strong>Label:</strong> {{ m.optional(deck.label) }}</p>
+<p><strong>Label:</strong> {{ m.localised(deck.label) }}</p>
 
-<p><strong>Description:</strong> {{ m.multiline(m.optional(deck.description)) }}</p>
+<p><strong>Description:</strong> {{ m.localised(deck.description, True) }}</p>
 
 <p><strong>Draw Messages:</strong> {% if not deck.draw_messages %}<em>None</em>{% endif %}</p>
 <ul>
-    {% for dm in deck.draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
+    {% for dm in deck.draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.localised(dm.message, True) }}</li>{% endfor %}
 </ul>
 
 <p><strong>Default Draw Messages:</strong> {% if not deck.default_draw_messages %}<em>None</em>{% endif %}</p>
 <ul>
-    {% for dm in deck.default_draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.multiline(dm.message) }}</li>{% endfor %}
+    {% for dm in deck.default_draw_messages %}<li>{{ m.element(dm.element.element_id)}}: {{ m.localised(dm.message, True) }}</li>{% endfor %}
 </ul>
 
 <p><strong>Cards:</strong></p>

@@ -15,10 +15,16 @@ def get(
         data: Dict[str, Any],
         key: str,
         default: Any = None,
-        conversion_function: Callable = None
+        conversion_function: Callable = None,
+        translations: Dict[str, Dict[str, Any]] = None
 ) -> Any:
     if key in data:
         if conversion_function:
             return conversion_function(data[key])
-        return data[key]
+        string = data[key]
+        if translations:
+            for culture, translation in translations.items():
+                if key in translation and translation[key]:
+                    string += f'$${translation[key]}'
+        return string
     return default

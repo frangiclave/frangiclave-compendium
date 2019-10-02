@@ -65,12 +65,15 @@ class SlotSpecification:
     def from_data(
             cls,
             data: Dict[str, Any],
+            translations: Dict[str, Dict[str, Any]],
             game_contents: GameContents
     ) -> 'SlotSpecification':
         s = cls()
         s.element = game_contents.get_element(data['id'])
-        s.label = get(data, 'label', s.element.element_id)
-        s.description = get(data, 'description', '')
+        s.label = get(
+            data, 'label', s.element.element_id, translations=translations
+        )
+        s.description = get(data, 'description', '', translations=translations)
         s.required = [
             SlotSpecificationItem(
                 element=game_contents.get_element(element_id),

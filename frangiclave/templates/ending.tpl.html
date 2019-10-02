@@ -18,9 +18,9 @@
 </h2>
     <img src="{{ base_url }}/static/images/endingArt/{{ ending.image }}.png" class="content-image" width="200" height="290" />
 
-    <p><strong>Title:</strong> {{ m.optional(ending.title) }}</p>
+    <p><strong>Title:</strong> {{ m.localised(ending.title) }}</p>
 
-    <p><strong>Description:</strong> {{ ending.description|safe }}</p>
+    <p><strong>Description:</strong> {{ m.localised(ending.description, True) }}</p>
 
     <p><strong>Ending Flavour:</strong> {{ ending.flavour.value }}</p>
 
