@@ -124,6 +124,6 @@ def _load_content(
 def _load_json_data(
         category_dir: Path
 ) -> Iterable[Tuple[Path, Dict[str, Any]]]:
-    for json_file_path in category_dir.glob('*.json'):
+    for json_file_path in sorted(category_dir.glob('*.json')):
         with json_file_path.open(encoding='utf-8') as f:
             yield json_file_path.name, jsom.load(f)

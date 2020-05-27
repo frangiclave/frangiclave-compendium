@@ -51,6 +51,9 @@ class ElementXTrigger(Base):
     result: 'Element' = relationship(
         'Element', back_populates='triggered_by', foreign_keys=result_id
     )
+    morph_effect: Optional[str] = Column(String, nullable=True)
+    morph_effect_level: Optional[int] = Column(Integer)
+    morph_effect_chance: Optional[int] = Column(Integer)
 
 
 class Element(Base, GameContentMixin):
@@ -196,12 +199,21 @@ class Element(Base, GameContentMixin):
             }, game_contents)
             for i, v in enumerate(get(data, 'slots', []))
         ]
-        e.x_triggers = [
-            ElementXTrigger(
-                trigger=game_contents.get_element(trigger_id),
-                result=game_contents.get_element(result_id)
-            ) for trigger_id, result_id in get(data, 'xtriggers', {}).items()
-        ]
+        for trigger_id, result in get(data, 'xtriggers', {}).items():
+            if isinstance(result, str):
+                e.x_triggers.append(ElementXTrigger(
+                    trigger=game_contents.get_element(trigger_id),
+                    result=game_contents.get_element(result)
+                ))
+            else:
+                for x_trigger_def in result:
+                    e.x_triggers.append(ElementXTrigger(
+                        trigger=game_contents.get_element(trigger_id),
+                        result=game_contents.get_element(x_trigger_def['id']),
+                        morph_effect=x_trigger_def.get('morpheffect'),
+                        morph_effect_level=int(x_trigger_def['level']) if 'level' in x_trigger_def else None,
+                        morph_effect_chance=int(x_trigger_def['chance']) if 'chance' in x_trigger_def else None,
+                    ))
         e.is_hidden = get(data, 'isHidden', False, to_bool)
         e.no_art_needed = get(data, 'noartneeded', False, to_bool)
         e.resaturate = get(data, 'resaturate', False, to_bool)

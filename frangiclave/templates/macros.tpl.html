@@ -49,7 +49,7 @@
 {% endmacro %}
 
 {% macro file_list(files, category, read_only, prefix, path) -%}
-{% for file, entries in files[category].items() %}
+{% for file, entries in files[category].items()|sort(attribute='0.name') %}
 <div class="section-file">
     <div class="section-file-title">
         {% if not read_only %}

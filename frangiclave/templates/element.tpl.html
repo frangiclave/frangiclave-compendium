@@ -35,7 +35,7 @@
 {{ m.slot_specifications(element.child_slots) }}
 
 <p><strong>Cross Triggers:</strong> {% if not element.x_triggers %}<em>None</em>{% endif %}</p>
-<ul>{% for x in element.x_triggers %}<li>{{ m.element(x.trigger.element_id) }} -> {{ m.element(x.result.element_id) }}</li>{% endfor %}</ul>
+<ul>{% for x in element.x_triggers %}<li>{{ m.element(x.trigger.element_id) }} -> {{ m.element(x.result.element_id) }}{%if x.morph_effect %}} ({{ x.morph_effect }}{%if x.morph_effect_level %} {{ x.morph_effect_level }}{%endif %}){% endif %}</li>{% endfor %}</ul>
 
 <p><strong>Triggered By:</strong> {% if not element.triggered_by %}<em>None</em>{% endif %}</p>
 <ul>{% for x in element.triggered_by %}<li>{{ m.element(x.trigger.element_id) }} (from {{ m.element(x.element.element_id) }})</li>{% endfor %}</ul>

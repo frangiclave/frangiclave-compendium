@@ -35,7 +35,10 @@ class Ending(Base):
         e.title = get(data, 'label', translations=translations)
         e.description = get(data, 'description', translations=translations)
         e.image = get(data, 'image')
-        e.flavour = EndingFlavour(get(data, 'flavour', 'None'))
+        flavour = get(data, 'flavour', 'None')
+        e.flavour = EndingFlavour(
+            flavour[0].upper() + flavour[1:]  # Workaround for a broken ending
+        )
         e.animation = get(data, 'anim')
         e.achievement = get(data, 'achievement')
         return e

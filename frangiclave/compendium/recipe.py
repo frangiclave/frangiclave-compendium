@@ -93,6 +93,9 @@ class Recipe(Base, GameContentMixin):
     mutation_effects: List[MutationEffect] = relationship(
         MutationEffect, back_populates='recipe'
     )
+    purge: List['RecipePurge'] = relationship('RecipePurge')
+    halt_verb: List['RecipeHaltVerb'] = relationship('RecipeHaltVerb')
+    delete_verb: List['RecipeDeleteVerb'] = relationship('RecipeDeleteVerb')
     signal_ending_flavour: EndingFlavour = Column(
         EnumType(EndingFlavour, name='ending_flavour')
     )
@@ -184,6 +187,9 @@ class Recipe(Base, GameContentMixin):
         r.mutation_effects = MutationEffect.from_data(
             get(data, 'mutations', []), game_contents
         )
+        r.purge = RecipePurge.from_data(get(data, 'purge', {}), game_contents)
+        r.halt_verb = RecipeHaltVerb.from_data(get(data, 'haltverb', {}), game_contents)
+        r.delete_verb = RecipeDeleteVerb.from_data(get(data, 'deleteverb', {}), game_contents)
         r.signal_ending_flavour = EndingFlavour(get(
             data, 'signalEndingFlavour', 'None'
         ))
@@ -262,14 +268,14 @@ class ElementQuantity:
     def element(self) -> 'Element':
         return relationship('Element')
 
-    quantity = Column(Integer)
+    quantity = Column(String)
 
     @classmethod
     def from_data(cls, val: Dict[str, str], game_contents: GameContents):
         return [
             cls(
                 element=game_contents.get_element(element_id),
-                quantity=int(quantity)
+                quantity=quantity
             )
             for element_id, quantity in val.items()
         ]
@@ -304,6 +310,31 @@ class DeckQuantity:
         ]
 
 
+class WildcardQuantity:
+
+    id = Column(Integer, primary_key=True)
+    wildcard = Column(String)
+    quantity = Column(String)
+
+    @declared_attr
+    def recipe_id(self) -> Column:
+        return Column(Integer, ForeignKey(Recipe.id))
+
+    @declared_attr
+    def recipe(self) -> Column:
+        return relationship('Recipe')
+
+    @classmethod
+    def from_data(cls, val: Dict[str, str], game_contents: GameContents):
+        return [
+            cls(
+                wildcard=wildcard,
+                quantity=quantity
+            )
+            for wildcard, quantity in val.items()
+        ]
+
+
 class RecipeRequirement(Base, ElementQuantity):
     __tablename__ = 'recipes_requirements'
 
@@ -322,6 +353,18 @@ class RecipeEffect(Base, ElementQuantity):
 
 class RecipeAspect(Base, ElementQuantity):
     __tablename__ = 'recipes_aspects'
+
+
+class RecipePurge(Base, ElementQuantity):
+    __tablename__ = 'recipes_purges'
+
+
+class RecipeHaltVerb(Base, WildcardQuantity):
+    __tablename__ = 'recipes_halt_verbs'
+
+
+class RecipeDeleteVerb(Base, WildcardQuantity):
+    __tablename__ = 'recipes_delete_verbs'
 
 
 class RecipeDeckEffect(Base, DeckQuantity):

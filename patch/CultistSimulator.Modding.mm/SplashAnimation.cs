@@ -4,6 +4,7 @@ using MonoMod;
 using System.IO;
 using System.Linq;
 using Assets.Core.Entities;
+using Noon;
 using UnityEngine;
 
 #pragma warning disable CS0626
@@ -31,24 +32,33 @@ namespace CultistSimulator.Modding.mm
 		{
 			// Export art
 			LanguageTable.LoadCulture("en");
-			ExportAssetFolderToFileSystem<Sprite>("burnImages/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("cardBacks/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("elementArt/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("elementArt/anim/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("endingArt/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("icons40/aspects/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("icons100/legacies/", GetSpriteAsPng, "png");
-			ExportAssetFolderToFileSystem<Sprite>("icons100/verbs/", GetSpriteAsPng, "png");
+			ExportSpriteFolderToFileSystem("burnImages/", "png");
+			ExportSpriteFolderToFileSystem("cardBacks/",  "png");
+			ExportSpriteFolderToFileSystem("elementArt/", "png");
+			ExportSpriteFolderToFileSystem("elementArt/anim/", "png");
+			ExportSpriteFolderToFileSystem("endingArt/", "png");
+			ExportSpriteFolderToFileSystem("icons40/aspects/", "png");
+			ExportSpriteFolderToFileSystem("icons100/legacies/", "png");
+			ExportSpriteFolderToFileSystem("icons100/verbs/", "png");
 		}
 
-		private static void ExportAssetFolderToFileSystem<T>(string sourceFolder, Func<T, byte[]> bytesFunc, string ext) where T : UnityEngine.Object
+		private static void ExportSpriteFolderToFileSystem(string sourceFolder, string ext)
 		{
 			string exportFolder = Path.Combine(ExportDir, sourceFolder);
 			Directory.CreateDirectory(exportFolder);
-			foreach (var asset in Resources.LoadAll<T>(sourceFolder))
+			var encounteredNames = new HashSet<string>();
+			foreach (var asset in Resources.LoadAll<Sprite>(sourceFolder))
 			{
+				NoonUtility.Log("Asset: " + asset.name);
+				if (encounteredNames.Contains(asset.name))
+				{
+					NoonUtility.Log("Encountered before!");
+					continue;
+				}
+
+				encounteredNames.Add(asset.name);
 				string exportPath = Path.Combine(exportFolder, asset.name + "." + ext);
-				File.WriteAllBytes(exportPath, bytesFunc(asset));
+				File.WriteAllBytes(exportPath, GetSpriteAsPng(asset));
 				Resources.UnloadAsset(asset);
 			}
 		}

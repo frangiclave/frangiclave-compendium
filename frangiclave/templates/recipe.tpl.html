@@ -48,6 +48,14 @@
     {% endfor %}
 </ul>
 
+<p><strong>Purge:</strong> {{ m.element_list(recipe.purge) }}</p>
+
+<p><strong>Halt Verbs:</strong> {% if not recipe.halt_verb %}<em>None</em>{% endif %}</p>
+<ul>{% for halt_verb in recipe.halt_verb %}<li>{{halt_verb.wildcard}}: {{halt_verb.quantity}}</li>{% endfor %}</ul>
+
+<p><strong>Delete Verbs:</strong> {% if not recipe.delete_verb %}<em>None</em>{% endif %}</p>
+<ul>{% for delete_verb in recipe.delete_verb %}<li>{{delete_verb.wildcard}}: {{delete_verb.quantity}}</li>{% endfor %}</ul>
+
 <p><strong>Alternative Recipes:</strong> {% if not recipe.alternative_recipes %}<em>Nothing</em>{% endif %}</p>
 {{ m.linked_recipe_details(recipe.alternative_recipes) }}
 

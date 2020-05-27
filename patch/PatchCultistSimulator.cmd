@@ -1,4 +1,4 @@
-@set CS_DIR=D:\Program Files\Steam\steamapps\common\Cultist Simulator\cultistsimulator_Data\Managed\
+@set CS_DIR=C:\Program Files (x86)\Steam\steamapps\common\Cultist Simulator\cultistsimulator_Data\Managed\
 
 @set OLD_CD=%CD%
 @set ASSEMBLY=Assembly-CSharp.dll
